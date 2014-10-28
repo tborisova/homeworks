@@ -1,0 +1,2 @@
+(define (less-than list1)
+  (lambda (number) (filter-list (lambda (el) (< el number)) list1)))
