@@ -1,8 +1,0 @@
-(define (difference list1 list2)
- (filter-list (lambda (num) (and (list-member? num list1) (not (list-member? num list2)))) (append list1 list2)))
-
-(define (list-member? a list)
-  (cond
-    ((null? list) #f)
-    ((= a (car list)) #t)
-    (else (list-member? a (cdr list)))))
