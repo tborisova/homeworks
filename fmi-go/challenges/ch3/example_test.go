@@ -3,7 +3,28 @@ package main
 import (
   "testing"
   "time"
+  "sync"
 )
+
+type Broadcaster struct{
+  Message int
+}
+
+func NewBroadcaster() *Broadcaster{
+  return &Broadcaster{}
+}
+
+func (b *Broadcaster) Send() chan<- int{
+  c := make(chan int)
+
+  return c
+}
+
+func (b *Broadcaster) Register() <-chan int{
+  c := make(chan int)
+
+  return c
+}
 
 func TestWithTwoListeners(t *testing.T) {
   b := NewBroadcaster()
