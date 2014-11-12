@@ -20,20 +20,6 @@
         (cons (nth-element (row matrix current) current) (diagonal-helper matrix (+ current 1)))))
   (diagonal-helper matrix 0))
 
-(define (second-diagonal matrix)
-  (define (diagonal-helper matrix current current-row)
-    (if (< current 0)
-        '()
-        (cons (nth-element (row matrix current-row) current) (diagonal-helper matrix (- current 1) (+ current-row 1)))))
-  (diagonal-helper matrix (- (length matrix) 1) 0))
-
-(define (adungiarano matrix)
-  (define (diagonal-helper matrix current)
-    (if (= current (length matrix))
-        '()
-        (cons (nth-element (row matrix current) current) (diagonal-helper matrix (+ current 1)))))
-  (diagonal-helper matrix 0))
-
 (define (add-matrix matrix1 matrix2)
   (cond
     ((and (null? matrix1) (null? matrix2)) '())
@@ -103,21 +89,3 @@
 
 (define (delete-column matrix n)
   (map (lambda (row) (without row n)) matrix))
-
-(define (duplicate matrix)
-  (cond
-    ((null? matrix) '())
-    ((cons (append (car matrix) (without (car matrix) (- (length (car matrix)) 1))) (duplicate (cdr matrix))))))
-
-;(define (determinant matrix)
- ; (define positive-diagonal (diagonal matrix))
-  ;(define negative-diagonal ())
-;)
-
-;(1,1)(2,2)(3,3)+ (1,2)(2,3)(3, 1) +(1,3)(2,1)(3, 2)  - (3,1)(2,2)(1,3) - (3,2)(2,3)(1,1) - (3, 3),(2, 1)(1, 2)
-
-(define (next-sarrus coords)
-  (cond
-   ((car coords) == )  
-  )  
-)
