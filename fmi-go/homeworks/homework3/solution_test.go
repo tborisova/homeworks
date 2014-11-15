@@ -3,6 +3,7 @@ package main
 import (
   "testing"
   "time"
+  "runtime"
 )
 
 func init() {
