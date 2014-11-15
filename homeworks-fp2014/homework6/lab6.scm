@@ -5,11 +5,6 @@
       (car matrix)
       (row (cdr matrix) (- n 1))))
 
-(define (nth-element list n)
-   (if (= n 0)
-       (car list)
-       (nth-element (cdr list) (- n 1))))
-
 (define (column matrix n)
   (map  (lambda (row) (nth-element row n)) matrix))
 
@@ -171,3 +166,39 @@
   )
 )
 
+(define (nth-element list n)
+  (if (= n 0)
+      (car list)
+      (nth-element (cdr list) (- n 1))))
+
+(define (determinant matrix)
+  (- (count-positive positive-row-column-order matrix 1) (count-positive negative-row-column-order matrix 1)))
+
+(define (count-positive l matrix res)
+  (cond
+    ((null? l) res)
+    (else (count-positive (cdr l) matrix (* res (row-sum (car l) 0 matrix))))
+  )
+)
+(define (row-sum l res matrix)
+  (if (= (length l) 0)
+     res
+     (row-sum (cdr l) (+ res (el-at-row-col matrix (nth-element (car l) 0)  (nth-element (car l) 1))) matrix)
+))
+
+(define (el-at-row-col matrix row col)
+  (nth-element (nth-element matrix row) col)
+)
+;(1,1)(2,2)(3,3)+ (1,2)(2,3)(3, 1) +(1,3)(2,1)(3, 2)  - (3,1)(2,2)(1,3) - (3,2)(2,3)(1,1) - (3, 3),(2, 1)(1, 2)
+
+(define positive-row-column-order '(((0 0) (1 1) (2 2)) ((0 1) (1 2) (2 0)) ((0 2) (1 0) (2 1))))
+
+(define negative-row-column-order '(((2 0) (1 1) (0 2)) ((2 1) (1 2) (0 0)) ((2 2) (1 0) (0 1))))
+
+(define matrix '((2 3 1) (4 1 0) (7 0 5)))
+
+;(count-positive positive-row-column-order matrix 0)
+;(row-sum (car positive-row-column-order) 1 matrix)
+;(nth-element matrix 1)
+
+(determinant matrix)
