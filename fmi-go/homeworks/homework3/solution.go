@@ -3,6 +3,8 @@ package main
 import(
   "time"
   "strings"
+  // "sync"
+  "strconv"
 )
 
 type ExpireMapError struct {
@@ -10,6 +12,7 @@ type ExpireMapError struct {
 }
 
 type ExpireMap struct{
+  // wg sync.WaitGroup
   mini_map_dns map[string]interface{}
   mini_map_active_to map[string]time.Time
   ch chan string
@@ -19,20 +22,30 @@ func NewExpireMap() *ExpireMap{
   mini_map_dns := make(map[string]interface{})
   mini_map := make(map[string]time.Time)
   ch := make(chan string, 1)
+  em := &ExpireMap{mini_map_dns: mini_map_dns, mini_map_active_to: mini_map, ch: ch}
 
-  return &ExpireMap{mini_map_dns: mini_map_dns, mini_map_active_to: mini_map, ch: ch}
+  return em
 }
 
 func (em *ExpireMap) Set(key string, value interface{}, expire time.Duration){
-  em.mini_map_active_to[key] = time.Now().Add(expire)
+  em.mini_map_active_to[key] = time.Now().UTC().Add(expire)
   em.mini_map_dns[key] = value
+  // em.wg.Add(1)
+  go func(em *ExpireMap, key string){
+    for {
+      if !em.mini_map_active_to[key].After(time.Now().UTC()){
+          em.ch <- key 
+          em.Delete(key)
+      }
+    }
+  }(em, key)
 }
 
 func (em *ExpireMap) Get(key string) (interface{}, bool){
   value, exists := em.mini_map_dns[key];
   elapsed_time := time.Now().UTC()
-  if exists && em.mini_map_active_to[key].Equal(elapsed_time){
-    return value, exists
+  if exists && em.mini_map_active_to[key].After(elapsed_time){
+    return value, true
   } else {
     return nil, false
   }
@@ -115,7 +128,9 @@ func (em *ExpireMap) Increment(key string) error{
     em.mini_map_dns[key] = value_int + 1
     return nil
   } else if ok_s{
-    em.mini_map_dns[key] = value_str + "1"
+    int_v, _ := strconv.Atoi(value_str)
+    int_v += 1
+    em.mini_map_dns[key] = strconv.Itoa(int_v)
     return nil
   } else {
     return &ExpireMapError{Message: "wow suuch much"}
@@ -130,7 +145,9 @@ func (em *ExpireMap) Decrement(key string) error{
     em.mini_map_dns[key] = value_int - 1
     return nil
   } else if ok_s{
-    em.mini_map_dns[key] = value_str + "1"
+    int_v, _ := strconv.Atoi(value_str)
+    int_v -= 1
+    em.mini_map_dns[key] = strconv.Itoa(int_v)
     return nil
   } else {
     return &ExpireMapError{Message: "wow suuch much"}
@@ -175,5 +192,6 @@ func (em *ExpireMap) Cleanup() {
 }
 
 func (em *ExpireMap) Destroy() {
-
+  // close(em.ch)
+  // em.wg.Done()
 }

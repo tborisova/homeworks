@@ -93,7 +93,7 @@ func TestTheExampleInReadme(t *testing.T) {
 
   if val, ok := cache.Get("spam"); ok {
     if val != "5" {
-      t.Error("spam was not 5")
+      t.Error("spam was not 5 %s", val)
     }
   } else {
     t.Error("No spam. Have some eggs instead?")
