@@ -3,7 +3,7 @@ package main
 import(
   "time"
   "strings"
-  // "sync"
+  "sync"
   "strconv"
 )
 
@@ -12,7 +12,7 @@ type ExpireMapError struct {
 }
 
 type ExpireMap struct{
-  // wg sync.WaitGroup
+  wg sync.WaitGroup
   mini_map_dns map[string]interface{}
   mini_map_active_to map[string]time.Time
   ch chan string
@@ -30,12 +30,14 @@ func NewExpireMap() *ExpireMap{
 func (em *ExpireMap) Set(key string, value interface{}, expire time.Duration){
   em.mini_map_active_to[key] = time.Now().UTC().Add(expire)
   em.mini_map_dns[key] = value
-  // em.wg.Add(1)
+  em.wg.Add(em.Size())
+
   go func(em *ExpireMap, key string){
     for {
       if !em.mini_map_active_to[key].After(time.Now().UTC()){
           em.ch <- key 
           em.Delete(key)
+          em.wg.Done()
       }
     }
   }(em, key)
@@ -120,7 +122,6 @@ func (em *ExpireMap) Size() int{
 }
 
 func (em *ExpireMap) Increment(key string) error{
-  // value, ok := em.Get(key)
   value_int, ok_i := em.GetInt(key)
   value_str, ok_s := em.GetString(key)
 
@@ -192,6 +193,8 @@ func (em *ExpireMap) Cleanup() {
 }
 
 func (em *ExpireMap) Destroy() {
-  // close(em.ch)
-  // em.wg.Done()
+ go func() {
+      em.wg.Wait()
+      close(em.ch)
+  }()
 }
