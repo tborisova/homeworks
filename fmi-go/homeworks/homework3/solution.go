@@ -11,26 +11,28 @@ type ExpireMapError struct {
 	Message string
 }
 
+type Cache struct {
+	ExpireAt time.Time
+	Data     interface{}
+}
+
 type ExpireMap struct {
-	wg                 sync.WaitGroup
-	mini_map_dns       map[string]interface{}
-	mini_map_active_to map[string]time.Time
-	ch                 chan string
+	wg     sync.WaitGroup
+	ch     chan string
+	Caches map[string]*Cache
 }
 
 func NewExpireMap() *ExpireMap {
-	mini_map_dns := make(map[string]interface{})
-	mini_map := make(map[string]time.Time)
+	caches := make(map[string]*Cache)
 	ch := make(chan string, 1)
-	em := &ExpireMap{mini_map_dns: mini_map_dns, mini_map_active_to: mini_map, ch: ch}
+	em := &ExpireMap{Caches: caches, ch: ch}
 
 	return em
 }
 
 func (em *ExpireMap) Set(key string, value interface{}, expire time.Duration) {
-	em.mini_map_active_to[key] = time.Now().UTC().Add(expire)
-	em.mini_map_dns[key] = value
-	em.wg.Add(em.Size())
+	em.Caches[key] = &Cache{Data: value, ExpireAt: time.Now().UTC().Add(expire)}
+	em.wg.Add(len(em.Caches))
 	go func(em *ExpireMap, key string, expire time.Duration) {
 		<-time.After(expire)
 		em.ch <- key
@@ -40,10 +42,10 @@ func (em *ExpireMap) Set(key string, value interface{}, expire time.Duration) {
 }
 
 func (em *ExpireMap) Get(key string) (interface{}, bool) {
-	value, exists := em.mini_map_dns[key]
+	value, exists := em.Caches[key]
 	elapsed_time := time.Now().UTC()
-	if exists && em.mini_map_active_to[key].After(elapsed_time) {
-		return value, true
+	if exists && em.Caches[key].ExpireAt.After(elapsed_time) {
+		return value.Data, true
 	} else {
 		return nil, false
 	}
@@ -96,15 +98,14 @@ func (em *ExpireMap) GetBool(key string) (bool, bool) {
 
 func (em *ExpireMap) Expires(key string) (time.Time, bool) {
 	if _, ok := em.Get(key); ok {
-		return em.mini_map_active_to[key], true
+		return em.Caches[key].ExpireAt, true
 	} else {
 		return time.Now(), false
 	}
 }
 
 func (em *ExpireMap) Delete(key string) {
-	delete(em.mini_map_dns, key)
-	delete(em.mini_map_active_to, key)
+	delete(em.Caches, key)
 }
 
 func (em *ExpireMap) Contains(key string) bool {
@@ -114,7 +115,7 @@ func (em *ExpireMap) Contains(key string) bool {
 }
 
 func (em *ExpireMap) Size() int {
-	return len(em.mini_map_dns)
+	return len(em.Caches)
 }
 
 func (em *ExpireMap) Increment(key string) error {
@@ -122,12 +123,12 @@ func (em *ExpireMap) Increment(key string) error {
 	value_str, ok_s := em.GetString(key)
 
 	if ok_i {
-		em.mini_map_dns[key] = value_int + 1
+		em.Caches[key].Data = value_int + 1
 		return nil
 	} else if ok_s {
 		int_v, _ := strconv.Atoi(value_str)
 		int_v += 1
-		em.mini_map_dns[key] = strconv.Itoa(int_v)
+		em.Caches[key].Data = strconv.Itoa(int_v)
 		return nil
 	} else {
 		return &ExpireMapError{Message: "wow suuch much"}
@@ -139,12 +140,12 @@ func (em *ExpireMap) Decrement(key string) error {
 	value_str, ok_s := em.GetString(key)
 
 	if ok_i {
-		em.mini_map_dns[key] = value_int - 1
+		em.Caches[key].Data = value_int - 1
 		return nil
 	} else if ok_s {
 		int_v, _ := strconv.Atoi(value_str)
 		int_v -= 1
-		em.mini_map_dns[key] = strconv.Itoa(int_v)
+		em.Caches[key].Data = strconv.Itoa(int_v)
 		return nil
 	} else {
 		return &ExpireMapError{Message: "wow suuch much"}
@@ -159,7 +160,7 @@ func (em *ExpireMap) ToUpper(key string) error {
 	value, ok := em.GetString(key)
 
 	if ok {
-		em.mini_map_dns[key] = strings.ToUpper(value)
+		em.Caches[key].Data = strings.ToUpper(value)
 		return nil
 	} else {
 		return &ExpireMapError{Message: "wow such much"}
@@ -170,7 +171,7 @@ func (em *ExpireMap) ToLower(key string) error {
 	value, ok := em.GetString(key)
 
 	if ok {
-		em.mini_map_dns[key] = strings.ToLower(value)
+		em.Caches[key].Data = strings.ToLower(value)
 		return nil
 	} else {
 		return &ExpireMapError{Message: "wow such much"}
@@ -182,9 +183,8 @@ func (em *ExpireMap) ExpiredChan() <-chan string {
 }
 
 func (em *ExpireMap) Cleanup() {
-	for key, _ := range em.mini_map_dns {
-		delete(em.mini_map_dns, key)
-		delete(em.mini_map_active_to, key)
+	for key, _ := range em.Caches {
+		delete(em.Caches, key)
 	}
 }
 
