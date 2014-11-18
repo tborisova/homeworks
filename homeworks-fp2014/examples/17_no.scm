@@ -35,6 +35,11 @@
   (= digit (nth-digit number (len-number number)))
 )
 
-(define (reverse-number n)
-  
+(define (reverse-number number)
+  (cond
+    ((= number 0) 0)
+    (else (+ (* (remainder number 10) (expt 10 (- (len-number number) 1))) (reverse-number (quotient number 10))))
+  )
 )
+
+(reverse-number 2)
