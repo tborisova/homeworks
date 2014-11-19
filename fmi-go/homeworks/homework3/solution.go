@@ -32,7 +32,7 @@ func NewExpireMap() *ExpireMap {
 
 func (em *ExpireMap) Set(key string, value interface{}, expire time.Duration) {
 	em.Caches[key] = &Cache{Data: value, ExpireAt: time.Now().UTC().Add(expire)}
-	em.wg.Add(len(em.Caches))
+	em.wg.Add(1)
 	go func(em *ExpireMap, key string, expire time.Duration) {
 		<-time.After(expire)
 		em.ch <- key
