@@ -146,7 +146,28 @@
     ((= (car l) n) (+ 1 (occur (cdr l) n)))
     (else (occur (cdr l) n))))
 
+(define (digit-factorials n)
+  (digit-factorials-helper n 1)
+)
 
-(define (num-is-equal-to-sum-fact num)
-  (= num )
+(define (digit-factorials-helper n current)
+  (cond
+    ((> current n) '())
+    ((equal? current (sum-of-digit-fact current)) (cons current (digit-factorials-helper n (+ current 1))))
+    (else (digit-factorials-helper n (+ current 1)))
+  )  
+)
+
+(define (sum-of-digit-fact n)
+  (cond
+    ((= n 0) 0)
+    (else (+ (factoriel (remainder n 10)) (sum-of-digit-fact (quotient n 10))))
+  )
+)
+
+(define (factoriel n)
+  (if (= n 0)
+      1
+      (* n (factoriel (- n 1)))
+  )
 )
