@@ -33,14 +33,3 @@
 )
 
 (split " " "Scheme is an akward language")
-
-
-
-
-
-
-
-
-
-
-
