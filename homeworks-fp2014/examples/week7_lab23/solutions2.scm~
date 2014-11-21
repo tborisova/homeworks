@@ -1,0 +1,6 @@
+(define (filter-map-all pr maps items)
+  (filter (lambda (x) ) items)
+)
+
+
+(filter-map-all predicates maps items)
