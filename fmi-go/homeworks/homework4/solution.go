@@ -46,13 +46,17 @@ func SeekAndDestroy(callback func(string) bool, chunkedUrlsToCheck <-chan []stri
 	start_time := time.Now().UTC()
 	for {
 		select {
-		case urls := <-chunkedUrlsToCheck:
-			for i := 0; i <= workersCount; i++ {
-				go func(c chan<- string) {
-					for _, url := range urls {
-						check(callback, url, c)
-					}
-				}(resultChan)
+		case urls, ok := <-chunkedUrlsToCheck:
+			if ok {
+				for i := 0; i <= workersCount; i++ {
+					go func(c chan<- string) {
+						for _, url := range urls {
+							check(callback, url, c)
+						}
+					}(resultChan)
+				}
+			} else {
+				return "", &MyTimeoutError{Message: "wow such much"}
 			}
 		case v := <-resultChan:
 			return v, nil
