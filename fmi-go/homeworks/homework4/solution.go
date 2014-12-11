@@ -6,7 +6,15 @@ import (
 	"time"
 )
 
-func check(callback func(string) bool, url string, c chan<- string) error {
+type TimeoutError struct {
+	Message string
+}
+
+func (e *TimeoutError) Error() string {
+	return e.Message
+}
+
+func checkUrl(callback func(string) bool, url string, c chan<- string) {
 	timeout := time.Duration(3 * time.Second)
 	client := http.Client{
 		Timeout: timeout,
@@ -15,58 +23,64 @@ func check(callback func(string) bool, url string, c chan<- string) error {
 	resp, err := client.Get(url)
 
 	if err != nil {
-		return err
+		c <- ""
+		return
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		c <- ""
+		return
 	}
 	if callback(string(body)) {
 		c <- url
+	} else {
+		c <- ""
 	}
 
-	return nil
-}
-
-type MyTimeoutError struct {
-	Message string
-}
-
-func (e *MyTimeoutError) Error() string {
-	return e.Message
+	return
 }
 
 func SeekAndDestroy(callback func(string) bool, chunkedUrlsToCheck <-chan []string, workersCount int) (string, error) {
 	if workersCount < 0 || chunkedUrlsToCheck == nil {
-		return "", &MyTimeoutError{Message: "wow such much"}
+		return "", &TimeoutError{Message: "wow such much"}
 	}
 
-	resultChan := make(chan string, 1)
+	resultChan := make(chan string, 20)
+	urlChan := make(chan string, 20)
 	start_time := time.Now().UTC()
+	avaliableWorkers := 0
+
 	for {
 		select {
 		case urls, ok := <-chunkedUrlsToCheck:
 			if ok {
-				for i := 0; i <= workersCount; i++ {
-					go func(c chan<- string) {
-						for _, url := range urls {
-							check(callback, url, c)
-						}
-					}(resultChan)
+				for _, urll := range urls {
+					urlChan <- urll
 				}
 			} else {
-				return "", &MyTimeoutError{Message: "wow such much"}
+				return "", &TimeoutError{Message: "wow such much"}
+			}
+		case url := <-urlChan:
+			if avaliableWorkers < workersCount {
+				avaliableWorkers++
+				go checkUrl(callback, url, resultChan)
 			}
 		case v := <-resultChan:
-			return v, nil
+			avaliableWorkers--
+			if v != "" {
+				return v, nil
+			}
 		default:
 			timeout := time.Duration(15 * time.Second)
 			elapsed_time := time.Now().UTC()
 			if elapsed_time.After(start_time.Add(timeout)) {
-				return "", &MyTimeoutError{Message: "wow such much"}
+				return "", &TimeoutError{Message: "wow such much"}
+			} else {
+				time.Sleep(1 * time.Second)
 			}
 		}
 	}
+
 	return "", nil
 }

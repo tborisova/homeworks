@@ -12,7 +12,7 @@ func ExampleWithExternalUrls() {
   go func() {
     urls <- []string{"http://www.abv.bg", "http://www.dir.bg"}
     time.Sleep(5 * time.Second)
-    urls <- []string{"http://www.google.com", "invalid.url....", "http://fmi.golang.bg/tasks/4", "http://en.wikipedia.org/wiki/Lorem_ipsum"}
+    urls <- []string{"http://www.google.com", "invalid.url....", "http://en.wikipedia.org/wiki/Lorem_ipsum"}
   }()
 
   callback := func(contents string) bool {
