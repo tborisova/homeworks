@@ -72,7 +72,7 @@ template<typename T> void queue<T>::pop(T& data){
     if(temp == rear){
       rear = front = NULL;
     }
-    else front = front->link;
+    else front = temp->link;
     delete temp;
   }
 }
