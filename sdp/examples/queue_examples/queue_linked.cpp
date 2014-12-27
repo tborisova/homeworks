@@ -1,4 +1,6 @@
-
+#include <iostream>
+#include <cstdlib>
+using namespace std;
 template <typename T = int>
 struct elem_q{
   T inf;
@@ -111,7 +113,7 @@ template<typename T>int queue<T>::length(){
 template <typename T> void queue<T>::copyQueue(const queue<T>& q){
   rear = front = NULL;
 
-  elem_q<T> *temp = front;
+  elem_q<T> *temp = q.front;
   while(temp){
     push(temp->inf);
     temp = temp->link;

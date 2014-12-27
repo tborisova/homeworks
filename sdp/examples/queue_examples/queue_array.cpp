@@ -6,7 +6,7 @@ const int MAXSIZE = 20;
 template <typename T = int> 
 class queue{
 public:
-  queue(int size);
+  queue(int size=MAXSIZE);
   ~queue();
   queue(const queue&);
   queue& operator=(const queue&);
