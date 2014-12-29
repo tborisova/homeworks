@@ -1,7 +1,7 @@
-#include <cstdlib>
-#include <cassert>
-#include <iostream>
-using namespace std;
+// #include <cstdlib>
+// #include <cassert>
+// #include <iostream>
+// using namespace std;
 
 template <typename T>
 struct elem{
@@ -134,3 +134,48 @@ template <typename T> int stack<T>::length(){
 
   return n;
 }
+
+
+template <typename T> void accumulate(T (*op)(T, T), T& null_value, stack<T>& st){
+  T x;
+
+  while(!st.empty()){
+    st.pop(x);
+    null_value = op(null_value, x);
+  }
+
+  return;
+}
+
+int my_int_func(int x, int y){
+  return x*y;
+}
+
+int my_map_func(int x){
+  return x+2;
+}
+
+template <typename T> void map(T (*func)(T), stack<T>& st, stack<T>& res){
+  T x;
+
+  while(!st.empty()){
+    st.pop(x);
+    res.push(func(x));
+  }
+}
+
+// int main(){
+//   stack<int> st, st2;
+//   st.push(10);
+//   st.push(20);
+//   st.push(30);
+
+//   map(my_map_func, st, st2);
+  
+//   // int x = 0;
+//   // accumulate(my_int_func, x, st2);
+
+//   st2.print(); //it empties the stack
+//   // cout << x << endl;
+//   return 0;
+// }

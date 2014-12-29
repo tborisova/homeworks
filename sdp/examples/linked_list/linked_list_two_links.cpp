@@ -27,6 +27,8 @@ public:
   void print() const;
   void print_reverse() const;
   int length() const;
+  template <typename P> friend ostream &operator<<(ostream&, DLList<P>&);
+  template <typename P> friend istream &operator>>(istream&, DLList<P>&);  
 private:
   elem_link2<T> *start, *end, *current_start, *current_end;
   void copyList(const DLList&);
@@ -197,23 +199,97 @@ template <typename T> void DLList<T>::deleteList(){
   end = NULL;
 }
 
+template <typename T> ostream &operator<<(ostream& stream, DLList<T>& list){
+  list.iterStart();
+  elem_link2<T>* current = list.iterNext();
+
+  while(current){
+    stream << current->inf << " ";
+    current = list.iterNext();
+  }
+
+  stream << endl;
+
+  return stream;
+}
+
+template <typename T> istream &operator>>(istream& stream, DLList<T>& list){
+  T x;
+  char ch = 'y';
+
+  while(ch == 'y'){
+    cout << "Enter element: ";
+    stream >> x;
+    list.toEnd(x);
+    cout << "Continue? (y/n): ";
+    cin >> ch;
+  }
+  
+  return stream;
+}
+
+
+template <typename T> bool symetric(DLList<T>& list){
+  if(list.empty() || list.length() == 1) return true;
+
+  list.iterStart();
+  list.iterEnd();
+  // bool result;
+  elem_link2<T>* next = list.iterNext();
+  elem_link2<T>* prev = list.iterPrev();
+
+  if(next->next == prev){
+    return true;
+  }
+  T x,y;
+  list.deleteElem(next, x);
+  list.deleteElem(prev, y);
+  return symetric(list) && x == y; 
+}
+
+
+template <typename T> bool monotonno(DLList<T>& list){
+  if(list.empty()) return true;
+
+  list.iterStart();
+  list.iterEnd();
+
+  elem_link2<T> *next = list.iterNext(), *prev = list.iterPrev();
+
+  T x, y;
+  list.deleteElem(next, x);
+  list.deleteElem(prev, y);
+
+  bool res = monotonnoHelper(list, x, y);
+
+  return res;
+}
+template <typename T> bool monotonnoHelper(DLList<T>& list, T x, T y){
+  if(list.empty()) return true;
+  list.iterStart();
+  list.iterEnd();
+
+  elem_link2<T> *next = list.iterNext(), *prev = list.iterPrev();
+  
+  if(next->next == prev) return true;
+
+  T z, t;
+  list.deleteElem(next, z);
+  list.deleteElem(prev, t);
+  return monotonnoHelper(list, z, t) && (x < z) && (t > y);
+}
 
 // int main(){
-//   DLList<int> l1;
+//   DLList<int> l1, l2;
 
 //   l1.toEnd(1);
-//   l1.toStart(2);
+//   l1.toEnd(2);
 //   l1.toEnd(3);
-
-//   // l1.deleteElem();
-//   l1.iterStart();
-
-//   elem_link2<int> *p = l1.iterNext();
-
-//   while(p->inf != 2){
-//     p = l1.iterNext();
-//   }
-//   int x;
-//   l1.deleteElem(p, x);
+//   l1.toEnd(5);
+//   l1.toEnd(4);
+//   l1.toEnd(0); 
 //   l1.print();
+//   cout << monotonno(l1) << endl;
+
+//   return 0;
 // }

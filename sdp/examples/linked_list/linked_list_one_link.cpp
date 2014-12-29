@@ -1,7 +1,7 @@
-#include <iostream>
-#include <cstdlib>
-#include <cassert>
-using namespace std;
+// #include <iostream>
+// #include <cstdlib>
+// #include <cassert>
+// using namespace std;
 
 template <typename T=int>
 struct elem_link1{
@@ -29,6 +29,8 @@ public:
   int length() const;
   void concat(const LList&);
   void reverse();
+  template <typename P> friend istream& operator>>(istream& stream, LList<P>& list);
+  template <typename P> friend ostream& operator<<(ostream& stream, LList<P>& list);
 private:
   elem_link1<T>* start, *end, *current;
   void copyList(const LList&);
@@ -207,3 +209,45 @@ template <typename T> void LList<T>::reverse(){
   *this = r;
 }
 
+template <typename T> ostream& operator<<(ostream& stream, LList<T>& list){
+  list.iterStart();
+  elem_link1<T>* el = list.iter();
+
+  while(el){
+    stream << el->inf << " ";
+    el = list.iter();
+  }
+  stream << endl;
+  return stream;
+}
+
+
+template <typename T> istream& operator>>(istream& stream, LList<T>& list){
+  char ch = 'y';
+  T x;
+
+  while(ch == 'y'){
+    cout << "Enter el: ";
+    cin >> x;
+    list.toEnd(x);
+    cout << "Continue?(y/n): ";
+    cin >> ch;
+  }  
+  
+  return stream;
+}
+
+// int main(){
+//   LList<int> l1, l2;
+
+//   l1.toEnd(1);
+//   l1.toEnd(3);
+//   l1.toEnd(2);
+//   l1.toEnd(3);
+//   l1.toEnd(1);
+//   cout << l1;
+
+//   cin >> l2;
+//   cout << l2;
+
+// }
