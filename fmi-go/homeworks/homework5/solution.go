@@ -44,3 +44,34 @@ type Client struct {
 func NewOrder(words []string, channel chan *Order) *Order {
   &Order{Words: words, Channel: channel, status: DOES_NOT_EXIST, Result: '', Id: getRandomString(32)}
 }
+
+type Factory struct {
+  materials map[string]uint16
+  workers_count uint8
+  Workers []Worker
+  // orders []Order
+  orders chan *Order // поръчките идват в този канал
+}
+
+type Worker struct {
+  busy bool //should be struct
+}
+
+func NewFactory(workers uint8) *Factory{
+  w := make(workers, []Worker)
+  &Factory{Workers: w}
+}
+
+func (f *Factory) Enqueue(order *Order) {
+  orders <- order
+}
+
+func (f *Factory) StartProducing() {
+  for _ := range workes{
+    if workers[i].busy == false{
+      workers[i].busy = true;
+      order := <-orders
+      workers.work(order);
+    }
+  }
+}
