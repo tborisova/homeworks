@@ -1,22 +1,16 @@
+
 package main
 
 import (
 "fmt"
-"time"
-"math/rand"
 )
-func f(n int) {
-  for i := 0; i < 10; i++ {
-    fmt.Println(n, ":", i)
-    amt := time.Duration(rand.Intn(250))
-    time.Sleep(time.Millisecond * amt)
-    }
-}
+
+import "github.com/tborisova/clean_like_gopher"
 
 func main() {
-  for i := 0; i < 10; i++ {
-   go f(i)
-  }
-  var input string
-  fmt.Scanln(&input)
+  l := make(map[string][]string)
+  l["only"] = []string{"people"}
+  m := clean_like_gopher.NewCleaningGopher("test", "mongo", "truncation", l)
+  m.Clean()
+  fmt.Println(m)
 }
