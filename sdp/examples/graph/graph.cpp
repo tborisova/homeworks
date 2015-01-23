@@ -45,35 +45,11 @@ template <typename T> void graph<T>::deleteTop(const T& a){
 
 template <typename T> void graph<T>::addRib(const T& a, const T& b){
   elem_link1<T> *q = point(a), *p;
-  p = new elem_link1<T>;
-  assert(p != NULL);
-  p->inf = b;
-  p->link = q->link;
-  q->link = p;
-}
-
-template <typename T> void graph<T>::deleteRib(const T& a, const T& b){
-  g.iterStart();
-  elem_link1< LList<T> > *p;
-  elem_link1<T> *q;
-
-  do{
-    p = g.iter();
-    p->inf.iterStart();
-    q = r->inf.iter();
-  }while(q->inf != a);
-  LList<T> x;
-  g.deleteElem(r, x);
-}
-
-template <typename T> void graph<T>::addRib(const T& a, const){
-  elem_link1<T> *q = point(a), *p;
 
   p = new elem_link1<T>;
   assert(p != NULL);
   p->inf = b;
   p->link = q->link;
-  q->link = p;
   q->link = p;
 }
 
@@ -146,7 +122,7 @@ template <typename T> LList<T> graph<T>::vertexes(){
   return l;
 }
 
-template <typename T> void graph<T>::point(){
+template <typename T> void graph<T>::print(){
   g.iterStart();
   elem_link1< LList<T> > *p = g.iter();
 

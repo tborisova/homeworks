@@ -1,8 +1,14 @@
 #include <iostream>
 #include <cassert>
-#include "LList.cpp"
-#include "graph.cpp"
+#include <cstdlib>
 using namespace std;
+#include "linked_list_one_link.cpp"
+#include "graph.cpp"
+
+template <typename T>
+int sumOfVertices(Graph<T>& g){
+  
+}
 
 template <typename T> void create_graph(graph<T> &g){
   char c;
@@ -11,7 +17,7 @@ template <typename T> void create_graph(graph<T> &g){
     T x;cin >> x;
     g.addTop(x);
     cout << "Top y/n ? ";cin >> c;
-  }while(c == "y");
+  }while(c == 'y');
 
   cout << "ribs: \n";
   do{
@@ -21,7 +27,7 @@ template <typename T> void create_graph(graph<T> &g){
     T y; cin >> y;
     g.addRib(x, y);
     cout << "next: y/n? "; cin >> c;
-  }while(c == "y");
+  }while(c == 'y');
 }
 
 typedef graph<int> intGraph;
