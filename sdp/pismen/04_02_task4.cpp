@@ -4,11 +4,18 @@ using namespace std;
 #include "BinOrdTree.cpp"
 
 bool check_tree(BinOrdTree<char*> t){
-  if(t.leftTree().empty() && t.rigthTree().empty()) return true;
-  if(t.leftTree().empty() && !t.rigthTree().empty()) return false;
-  if(!t.leftTree().empty() && t.rigthTree().empty()) return false;
-
-  if(cmp(concat(t.leftTree().rootTree(), t.rigthTree().rootTree()), t.rootTree()) == 0){
-    return check_tree(t.leftTree()) && check_tree(t.rigthTree());
-  }
+  // make list of pointer to nnodes - f
+  // push the root of the tree in the list
+  // while lnp is not empty
+    // get the string from the root = foo(*f)
+    // make temp list of pointers
+    // for each x in f{
+      // temp -> push_back(x->leftTree().rootTree())
+      // temp -> push_back(x->rightTree().rootTree())
+    //}
+    //std::swap(f, temp)
+    //delete temp
+  //end of while
 }
+
+//foo function - взима спиисък от nodes и връща стринг, който представлява конкатенираните стрингове в nodes

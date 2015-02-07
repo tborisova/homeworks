@@ -22,6 +22,8 @@ using namespace std;
 #include "cyclicList.cpp"
 #include "linked_list_two_links.cpp"
 
+
+// прати на дамян
 int some_func(queue<int>& q,const char* s){
   int n = strlen(s);
   int i= 0;
