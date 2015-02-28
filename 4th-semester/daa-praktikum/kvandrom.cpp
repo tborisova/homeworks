@@ -3,7 +3,7 @@
 #include <cstdio>
 using namespace std;
 
-int countOfDigits(int number){
+int countOfDigits(long int number){
   int count = 0;
 
   while(number != 0){
@@ -14,12 +14,12 @@ int countOfDigits(int number){
   return count;
 }
 
-int reverse(int n){
-  int res = 0;
+int reverse(long int n){
+  long int res = 0;
   int count = countOfDigits(n) - 1;
   
   while(n != 0){
-    res += (n % 10)*pow(10, count);
+    res += (n % 10)*pow(10.00, count);
     n = n / 10;
     count--;
   }
@@ -27,7 +27,7 @@ int reverse(int n){
   return res;
 }
 
-bool palindrome(int number){
+bool palindrome(long int number){
   return number == reverse(number);
 }
 
@@ -38,16 +38,16 @@ bool kvandrom(long int number){
 }
 
 int main(){
-  int counter = 0, a, b;
-  long int!!! a i b
-  scanf("%d", &a);
-  scanf("%d", &b);
+  int counter = 0;
+  long int a, b;
+
+  scanf("%ld", &a);
+  scanf("%ld", &b);
 
   while(a <= b){
     if(kvandrom(a)) counter++;
     a++;
   }
 
-  cout << counter;
-  // printf("%d", counter);
+  printf("%d", counter);
 }
