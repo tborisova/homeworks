@@ -1,1 +1,0 @@
-(filter-map-all predicates maps items)

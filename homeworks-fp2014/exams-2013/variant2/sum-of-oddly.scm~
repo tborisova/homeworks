@@ -1,3 +1,0 @@
-(define (sum-of-oddly a b)
-  (define (sum-of-oddly-helper a b 0))
-)

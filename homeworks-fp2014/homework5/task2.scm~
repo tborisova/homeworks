@@ -1,5 +1,0 @@
-
-(define (digit-count x)
-  (if (< x 10)
-      1
-      (+ 1 (digit-count (quotient x 10)))))

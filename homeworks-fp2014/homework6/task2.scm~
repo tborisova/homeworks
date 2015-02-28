@@ -1,4 +1,0 @@
-(define (nth-element list n)
-  (if (= n 0)
-      (car list)
-      (nth-element (cdr list) (- n 1))))
