@@ -73,10 +73,13 @@ int main(){
 
   for(row = 0; row < n; row++){
     for(col = 0; col < n; col++){
-      printf("%5ld ", matrix[row][col]);
+      printf("%5ld", matrix[row][col]);
+      if(col != n - 1){
+        printf(" ");
+      }
     }
     printf("\n");
   }
-    printf("\n");
 
+  return 0;
 }
