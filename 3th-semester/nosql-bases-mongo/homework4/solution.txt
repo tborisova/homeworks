@@ -1,0 +1,25 @@
+колекция user
+  полета:
+    email - string, default: "" - съдържа имейлът на потребителя
+    login - string, default: "" - съдържа username на потребител
+    encrypted_password - string, default: "" - криптирана парола
+    reset_password_token - string - нужно е, когато потребителя си ресетва паролата
+    reset_password_sent_at - time -  същата причина като горната
+    remember_created_at - time - необходимо поле за remember_at
+    verified - boolean 
+    list_of_followed_user - array - съхранява ид-та на потребителите, които потребителят следва
+  връзки:
+    messages - връзката е 1 user - N messages, те не са ембеднати, тъй като не е трудно да се добавят нови съобщения, да се взимат от базата по user, да се редактират.
+  индекси: индекс на list_of_followed_user - тъй като съобщенията на followed users ще се показват, когато потребителя се логне, достъпът до тях трябва да е бърз
+
+колекция messages:
+  полета:
+    content - string, limit: 140 
+    place_of_publishing - string, limit: 30
+    created_at - date - дата на публикуване
+  връзки:
+    user
+  индекси:
+    индекс на content - заради хештаговете
+    индекс на created_at - заради сортирането по дата
+    индекс на user - за да може като се взимат съобщенията да има бърз достъп до автора им 
