@@ -59,19 +59,13 @@ int main(){
   }
 
   for(i = 0; i < n - 1; i++){
-    min = numbers[i];
-    k = i;
-
     for(j = i + 1; j < n; j++){
-
-      if(is_smaller(numbers[j], min)){
-        min = numbers[j];
-        k = j;
+      if(is_smaller(numbers[j], numbers[i])){
+        min = numbers[i];
+        numbers[i] = numbers[j];
+        numbers[j] = min;
       }
     }
-
-    numbers[k] = numbers[i];
-    numbers[i] = min;
   }
 
   for(i = 0; i < n; i++){

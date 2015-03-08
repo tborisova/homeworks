@@ -7,19 +7,16 @@ int main(){
 
 
   int counter = 0;
-  long int a, b;
+  float a, b;
 
-  scanf("%ld", &a);
-  scanf("%ld", &b);
+  scanf("%f", &a);
+  scanf("%f", &b);
 
-  cout << a << endl;
   for(int i = 0; i < 39; i++){
     if(palindromic_squares[i] >= a && palindromic_squares[i] <= b){
-      cout << palindromic_squares[i] << endl;
       counter++;
     }
   }
-  cout << b << endl;
 
   printf("%d", counter);
 }
