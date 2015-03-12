@@ -1,9 +1,18 @@
 #include <iostream>
+<<<<<<< HEAD
 #include <cstdio>
 #include <string>
 using namespace std;
  
  int get_num(char c){
+=======
+#include <string>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+
+int get_num(char c){
+>>>>>>> more solutions added
   if(c >= 'A' && c <= 'Z'){
     return 37 + (c - 'A');
   }else if(c >= 'a' && c <= 'z'){
@@ -13,6 +22,7 @@ using namespace std;
   }
 }
 
+<<<<<<< HEAD
 void merge(string &a, const int low, const int mid, const int high){
     string b(a);
     int h,i,j,k;
@@ -60,6 +70,11 @@ void merge_sort(string &a, const int low, const int high){
 }
  
 
+=======
+bool compare(char a, char b){
+  return get_num(a) - get_num(b);
+}
+>>>>>>> more solutions added
 
 int main(){
   int n;
@@ -68,7 +83,12 @@ int main(){
   string str, str2;
   cin >> str;
   
+<<<<<<< HEAD
   merge_sort(str, 0, n-1);
 
   cout << str << endl;
+=======
+  sort(str.begin(), str.end(), compare);
+  cout <<str << endl;
+>>>>>>> more solutions added
 }

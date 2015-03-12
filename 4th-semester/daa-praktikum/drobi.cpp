@@ -1,46 +1,54 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
-#include <sstream>
 #include <cstdio>
 using namespace std;
 
+struct fraction{
+  int num;
+  int den;
 
+  bool operator<(const fraction& other) const {
+    return num*other.den < other.num*den;
+  };
+};
+
+int gdc(int a, int b){
+  while(b){
+    int r = a % b;
+    a = b;
+    b = r;
+  }
+
+  return a;
+}
 int main(){
 
   int n;
-  int fractions[10000];
-  int index = 1;
-  stringstream ss;
-  string number;
-  string all_numbers;
-       
+  fraction fractions[5050]; 
+
   scanf("%d", &n);
-
+  int index = 0;
   for(int i = 1; i <= n - 1; i++){
-
-    for(int j = i + 1; j <= n; j++){
-      if(j % i || i == 1){
-        ss << i << "/" << j << " ";
-        ss >> number;
+    for(int j = n; j >= i+ 1; j--){
+      if(gdc(i, j) == 1){
+        fractions[index].num = i;
+        fractions[index].den = j;
         index++;
-        all_numbers += number + " ";
       }
     }
   }
- 
-  istringstream iss (all_numbers);
-  for (int i=0; i<index; i++){
-    cout << fractions[i] << "  "; 
-    iss >> fractions[i];
+
+  sort(fractions, fractions + index);
+  
+  cout << "0 ";
+
+  for(int i = 0; i < index; i++){
+    cout << fractions[i].num << "/" << fractions[i].den;
+    if(i != index - 1){
+      cout << " ";
+    }
   }
   
-  // for (int i=0; i<index; i++){
-  //   cout << fractions[i];
-  // }
-
-  // sort(fractions, fractions + index);
-
-  cout << all_numbers << endl;
   return 0;
 }

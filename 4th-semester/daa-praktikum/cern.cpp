@@ -1,74 +1,36 @@
 #include <iostream>
-#include <cmath>
 #include <cstdio>
+#include <string>
+
 using namespace std;
 
-int countOfDigits(long int number){
-  int count = 0;
+string arr[10000];
 
-  while(number != 0){
-    count++;
-    number = number/10;
-  }
-
-  return count;
-}
-
-int reverse(long int n){
-  long int res = 0;
-  int count = countOfDigits(n) - 1;
-  
-  while(n != 0){
-    res += (n % 10)*pow(10.00, count);
-    n = n / 10;
-    count--;
-  }
-
-  return res;
-}
-
-bool is_smaller(long int a, long int b){
-  int digit_a, digit_b;
-
-  while(a != 0 && b != 0){
-    digit_a = a / pow(10.00, countOfDigits(a) - 1);
-    digit_b = b / pow(10.00, countOfDigits(b) - 1);
-
-    if(digit_a < digit_b) return true;
-    if(digit_a > digit_b) return false;
-    if(digit_a == digit_b){
-      a = reverse(reverse(a) / 10);
-      b = reverse(reverse(b) / 10);
-    }
-  }
-
-  if(a == 0 && b != 0) return true;
-  if(a != 0 && b == 0) return false;
-}
+int n;
 
 int main(){
-  int n, i, k, j;
 
   scanf("%d", &n);
 
-  long int numbers[n];
-  long int min;
+  string min;
 
-  for(i = 0; i < n; i++){
-    scanf("%ld", &numbers[i]);
+  for(int i = 0; i < n; i++) {
+    scanf("%d", &arr[i]);
   }
 
-  for(i = 0; i < n - 1; i++){
-    for(j = i + 1; j < n; j++){
-      if(is_smaller(numbers[j], numbers[i])){
-        min = numbers[i];
-        numbers[i] = numbers[j];
-        numbers[j] = min;
+  for(int i = 0; i < n - 1; i++){
+    for(int j = i + 1; j < n; j++){
+      if(arr[j] < arr[i]){
+        min = arr[i];
+        arr[i] = arr[j];
+        arr[j] = min;
       }
     }
   }
 
-  for(i = 0; i < n; i++){
-    printf("%ld\n", numbers[i]);
+  for(int i = 0; i < n; i++) {
+    printf("%d\n", arr[i]);
   }
+
+  return 0;
 }

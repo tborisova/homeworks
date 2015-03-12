@@ -1,0 +1,30 @@
+using namespace std;
+#include <vector>
+
+масив, а не вектор
+статично да се заделя памет
+
+вектор ако все пак ни трябва, си правим:
+
+vector<int> v
+v.reserve(n); - колко да си запази
+
+string - cin and cout
+stack, queue
+priority queue
+map
+set
+stable_sort
+
+k-тия по големина елемент от масив
+quick select - прочети - прави горното нещо - О(n)
+
+
+insertion sort - medians
+
+1 3 7 идва 4
+почваме отзад и увеличаваме индекса на обхождане
+Тема сортиране -  синята книга!
+
+
+counting sort
