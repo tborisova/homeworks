@@ -1,0 +1,28 @@
+counting sort - coaching sort
+
+{"1": x,
+ "2": y,
+ "3": z,
+}
+това е counting sort
+четем и въвеждаме срещанията в масив counts[str[i]]++
+
+for i = '0' until i = '9'
+ for j = '0'; j < counts[i]; j++
+  result[index++] = i;
+
+Бързи сортирания:
+merge
+heap
+quick sort
+
+Merge sort - разделяй и владей, брой на инверсии - от i1 до m
+heap sort - пирамида - най-големият елемент е най-отгоре
+
+i
+
+2i 2i+1
+
+#define max 1000000
+
+
