@@ -8,7 +8,12 @@ using namespace std;
 =======
 #include <string>
 #include <cstdio>
+#include <cstdlib>
 #include <algorithm>
+#include <map>
+#include <vector>
+#include <string>
+#include <sstream>
 using namespace std;
 
 int get_num(char c){
@@ -22,6 +27,7 @@ int get_num(char c){
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 void merge(string &a, const int low, const int mid, const int high){
     string b(a);
@@ -76,6 +82,8 @@ bool compare(char a, char b){
 }
 >>>>>>> more solutions added
 
+=======
+>>>>>>> materials
 int main(){
   int n;
   
@@ -84,11 +92,23 @@ int main(){
   cin >> str;
   
 <<<<<<< HEAD
+<<<<<<< HEAD
   merge_sort(str, 0, n-1);
 
   cout << str << endl;
 =======
   sort(str.begin(), str.end(), compare);
+=======
+  // for (int j = 0; j < n; j++){
+  //   char x = str[j];
+  //   int k = j - 1;
+  //   while(get_num(x) < get_num(str[k]) && k >= 0){
+  //     str[k+1] = str[k--];
+  //   }
+  //   str[k+1] = x;
+  // }
+  qsort(str, str + n);
+>>>>>>> materials
   cout <<str << endl;
 >>>>>>> more solutions added
 }
