@@ -3,48 +3,64 @@
 #include <string>
 using namespace std;
 
-int best_m, best_h, best_s;
+struct person{
+  string name;
+  int minutes;
+  int seconds;
+  int hundreds;
+  int position;
 
-bool is_faster(int m, int s, int h){
-  if(m < best_m){
-    return true;
-  }else if(m == best_m){
-    if(s < best_s){
+  bool operator<(person& other){
+   if(minutes < other.minutes){
       return true;
-    }else if(s == best_s){
-      return h < best_h;
+    }else if(minutes == other.minutes){
+      if(seconds < other.seconds){
+        return true;
+      }else if(seconds == other.seconds){
+        return hundreds < other.hundreds;
+      }
     }
+    return false; 
   }
-  return false;
-}
 
-bool are_equal(int m, int s, int h){
-  return m == best_m && s == best_s && h == best_h;
-}
+  bool operator==(person& other){
+   return minutes == other.minutes && seconds == other.seconds && hundreds == other.hundreds;
+  }
+};
 
 int main(){
-  int n, m, s, h;
+  int n, m, s, h, d, pos = 0;
   string name;
-  int count_of_people_with_score_equal_to_current_best_score = 1;
-  int count_of_people_with_score_equal_to_previous_best_score = 0;
+  person people[1000];
   scanf("%d", &n);
-  cin >> name;
-  scanf("%d:%d.%d", &best_m, &best_s, &best_h);
-  cout << name << " " << 1 << endl;
 
-  for(int i = 0; i < n - 1; i++){
-    cin >> name;
-    scanf("%d:%d.%d", &m, &s, &h);
-    if(is_faster(m, s, h)){
-      count_of_people_with_score_equal_to_previous_best_score = count_of_people_with_score_equal_to_current_best_score;
-      count_of_people_with_score_equal_to_current_best_score = 0;
-      cout << name << " " << 1 << endl;
-      best_m = m; best_h = h; best_s = s;
-    }else if(are_equal(m, s, h)){    
-      cout << name << " " << count_of_people_with_score_equal_to_previous_best_score + 1 << endl;
-      count_of_people_with_score_equal_to_current_best_score++;
+  for(int i = 0; i < n; i++){
+    cin >> people[i].name;
+    scanf("%d:%d.%d", &people[i].minutes, &people[i].seconds, &people[i].hundreds);
+  }
+  
+  cout << people[0].name << " " << 1 << endl;
+  people[0].position = 1;
+
+  for (int c = 1 ; c <= n - 1; c++) {
+    d = c;
+    name = people[c].name;
+    if(people[c] == people[d-1]){
+      cout << people[d].name << " " << people[d-1].position << endl;
     }else{
-      cout << name << " " << count_of_people_with_score_equal_to_current_best_score + 1 << endl;
+      while ( d > 0 && people[d] < people[d-1]) {
+        person t          = people[d];
+        people[d]   = people[d-1];
+        people[d-1] = t;
+        d--;
+      }
+      if(people[d] == people[d - 1]){
+        cout << people[d].name << " " << people[d-1].position << endl;
+      }else{
+        people[d].position = d + 1;
+        cout << people[d].name << " " << people[d].position << endl;
+      }
     }
   }
+
 }
