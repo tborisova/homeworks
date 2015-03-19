@@ -3,12 +3,12 @@
 #include <string>
 using namespace std;
 
+//http://judge.openfmi.net:9280/timed_contest/open_contest?contest_id=71
 struct person{
   string name;
   int minutes;
   int seconds;
   int hundreds;
-  int position;
 
   bool operator<(person& other){
    if(minutes < other.minutes){
@@ -26,6 +26,11 @@ struct person{
   bool operator==(person& other){
    return minutes == other.minutes && seconds == other.seconds && hundreds == other.hundreds;
   }
+
+  bool operator>(person& other){
+    return !(*this<other);
+  }
+  
 };
 
 int main(){
@@ -40,27 +45,17 @@ int main(){
   }
   
   cout << people[0].name << " " << 1 << endl;
-  people[0].position = 1;
 
-  for (int c = 1 ; c <= n - 1; c++) {
-    d = c;
-    name = people[c].name;
-    if(people[c] == people[d-1]){
-      cout << people[d].name << " " << people[d-1].position << endl;
-    }else{
-      while ( d > 0 && people[d] < people[d-1]) {
-        person t          = people[d];
-        people[d]   = people[d-1];
-        people[d-1] = t;
-        d--;
-      }
-      if(people[d] == people[d - 1]){
-        cout << people[d].name << " " << people[d-1].position << endl;
-      }else{
-        people[d].position = d + 1;
-        cout << people[d].name << " " << people[d].position << endl;
-      }
+  for (int i = 1 ; i <= n - 1; i++) {
+    person p = people[i];
+    int index = i;
+
+    while(index > 0 && (people[index - 1] > p || people[index - 1] == p) ){
+      people[index] = people[index - 1];
+      index--;
     }
-  }
+    people[index] = p;
 
+    cout << people[index].name << " " << index + 1 << endl;
+  }
 }
