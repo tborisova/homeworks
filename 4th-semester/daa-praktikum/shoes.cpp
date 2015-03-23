@@ -9,7 +9,6 @@ int main(){
   long num2, num3;
   long available_shoes[1048576] = {};
   long feet_looking_for_shoes[1048576] = {};
-
   scanf("%d", &n);
   scanf("%d", &m);
 
