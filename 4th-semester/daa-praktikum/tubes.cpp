@@ -4,31 +4,37 @@ using namespace std;
 
 int main(){
   int tests, k, n, expected_k;
-  long tubes[10000], num, min;
+  long tubes[10000], num, max;
   scanf("%d", &tests);
 
   while(tests != 0){
 
     scanf("%d %d", &n, &k);
 
-    scanf("%ld", &tubes[0]);
-    min = tubes[0];
+    // scanf("%ld", &tubes[0]);
+    // max = tubes[0];
 
-    for(int i = 1; i < n; i++){
+    for(int i = 0; i < n; i++){
       scanf("%ld", &tubes[i]);
-      if(min > tubes[i]) min = tubes[i];
+      // if(max < tubes[i]) max = tubes[i];
     }
 
     expected_k = 0;
     bool found = false;
-    while(min > 0){
+
+    sort(tubes, tubes + n);
+    max = tubes[0];
+    max_i = 0;
+
+    while(max > 0){
       found = false;
 
       for(int i = 0; i < n; i++){
         num = tubes[i];
-        while(num > 0 && (num - min) >= 0 && expected_k < k){
-          num -= min;
+        while(num > 0 && (num - max) >= 0 && expected_k < k){
+          num -= max;
           expected_k++;
+          in_here++;
         }
       }
 
@@ -37,15 +43,12 @@ int main(){
         break;
       }
 
-      min--;
+      max_i--;
       expected_k = 0;  
     }
 
-    // if(min < 0){
-    //   printf("0\n");
-    // }else{
     if(found){
-      printf("%ld\n", min);      
+      printf("%ld\n", max);      
     }else{
       printf("0\n");
     }
