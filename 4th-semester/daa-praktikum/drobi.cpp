@@ -25,7 +25,7 @@ int gdc(int a, int b){
 int main(){
 
   int n;
-  fraction fractions[5050]; 
+  fraction fractions[100]; 
 
   scanf("%d", &n);
   int index = 0;
