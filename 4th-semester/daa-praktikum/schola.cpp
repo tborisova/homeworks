@@ -1,12 +1,14 @@
-#include<cstdio>
-#include<vector>
-#include<queue>
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <iostream>
 using namespace std;
 
 #define N 500
 vector<int> neighbours[N];
 bool visited[N];
 int n, counter = 0;
+int pred[N] = {-1};
 
 void bfs(int current)
 {
@@ -15,14 +17,15 @@ void bfs(int current)
   elements.push(current);
 
   while(!elements.empty()){
-    counter++;
     int next = elements.front();
     elements.pop();
+    cout << next << endl;
     for(int i = 0; i < neighbours[next].size(); i++){
       next = neighbours[current][i];
       if(!visited[next]){
         elements.push(next);
         visited[next] = 1;
+        counter++;
       }
     }
   }
@@ -32,14 +35,16 @@ int main()
 {
   int m, i1, i2;
   scanf("%d%d", &n, &m);
-  for (int j = 1; j < m+1; j++)
-  {
+  for(int j = 1; j < m+1; j++){
     scanf("%d%d", &i1, &i2);
     neighbours[i1].push_back(i2);
     neighbours[i2].push_back(i1);
   }
 
-  bfs(1);
+  for(int j = 1; j < m + 1; j++){
+    bfs(neighbours[j][0]);
+  }
+
 
   printf("%d\n", counter);
   return 0;
