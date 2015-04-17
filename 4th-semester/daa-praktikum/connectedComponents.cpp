@@ -5,16 +5,21 @@ using namespace std;
 #define N 500
 vector<int> neighbours[N];
 bool visited[N];
-int n;
+int n, cycl = 0;
 
-void dfs(int current)
+void dfs(int current, int parent)
 {
 	visited[current] = 1;
 	for (int i = 0; i < neighbours[current].size(); i++)
-	{
+	{	
+		if(cycl) return;
 		int next = neighbours[current][i];
-		if (!visited[next])
-			dfs(next);
+		if(visited[next] && next != parent){
+	        printf("Графът е цикличен! \n");
+	        cycl = 1;
+	        return;
+		}else if (!visited[next] && next != parent)
+			dfs(next, current);
 	}
 }
 
@@ -25,11 +30,12 @@ int dfsGraph()
 	{
 		if (!visited[i])
 		{
-			dfs(i);
+			dfs(i, - 1);
+			if(cycl) break;
 			componentsCount++;
 		}
 	}
-
+  	if (0 == cycl) printf(" Графът е дърво (не съдържа цикли)!\n");
 	return componentsCount;
 }
 
