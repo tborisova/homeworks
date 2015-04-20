@@ -10,6 +10,7 @@ int n;
 void dfs(int current)
 {
 	visited[current] = 1;
+	cout << current
 	for (int i = 0; i < neighbours[current].size(); i++)
 	{
 		int next = neighbours[current][i];
@@ -23,7 +24,7 @@ int dfsGraph()
 	int componentsCount = 0;
 	for (int i = 1; i <= n; i++)
 	{
-		if (!visited[i])
+		if (!visited[i] && neighbours[i].size() > 1)
 		{
 			dfs(i);
 			componentsCount++;
