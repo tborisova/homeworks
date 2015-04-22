@@ -9,7 +9,7 @@ vector<int> neighbours[M];
 bool visited[N] = {false};
 int n, cycl = 0;
 
-void dfs(int current, int parent)
+void dfs(int current)
 {
   visited[current] = true;
 
@@ -31,7 +31,7 @@ void dfsGraph(int test)
   for (int i = 1; i <= n; i++)
   {
     if(!visited[i]){
-      dfs(i, - 1);
+      dfs(i);
       if(cycl) break;
     }
   }
