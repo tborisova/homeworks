@@ -12,49 +12,7 @@ int parent[MAXN];
 int dist[MAXN];
 bool visited[MAXN];
 
-void Dijkstra(int node)
-{
-  int min_dist, i;
-  for(i = 0; i < n; i++)
-  {
-    dist[i] = 0;
-    visited[i] = 0;
-  }
-  dist[node] = MAX_VALUE;
 
-  for(;;)
-  {
-    cout << "ddd"<<endl;
-    min_dist = -1;
-    for(i = 0; i < n; i++)
-      if(dist[i] > min_dist && !visited[i])
-      {
-        node = i;
-        min_dist = dist[i];
-      }
-    cout << node << endl; 
-    if(min_dist == -1)
-      return;
-    visited[node] = 1;
-
-    for(i =0; i < n; i++)
-      if(islands[node][i] && (dist[i] < min(dist[node], islands[node][i])))
-        dist[i] = min(dist[node], islands[node][i]);
-  }
-
-}
-
-
-void printIslands(){
-  int end_rows = 2*n - 1;
-
-  for(int i = 0; i < end_rows; i++){
-    for(int j = 0; j < end_rows; j++){
-      cout << islands[i][j] << " ";
-    }
-    cout << endl;
-  }
-}
 
 void fillIslands(){
   int end_columns, end_rows, mid_row, j, i;
@@ -97,20 +55,27 @@ int main()
 
   fillIslands();
 
-  for(int i = 0; i < 2; i++){
-    from = i;
-    to = n - 1;
-    Dijkstra(from);
-
-    if(dist[to] == MAX_VALUE)
-      cout << "No way exists from node " << from << " to node " << to << "!\n";
-    else
+  for(int i  = 0; i < n;i++){
+    for (int j = 0; j < n; ++j)
     {
-      // cout << dist[to] << endl;
-      printWay(to);
-      // cout << to << endl;
+      cout << islands[i][j];
     }
+    cout << endl;
   }
+  // for(int i = 0; i < 2; i++){
+  //   from = i;
+  //   to = n - 1;
+  //   Dijkstra(from);
+
+  //   if(dist[to] == MAX_VALUE)
+  //     cout << "No way exists from node " << from << " to node " << to << "!\n";
+  //   else
+  //   {
+  //     // cout << dist[to] << endl;
+  //     printWay(to);
+  //     // cout << to << endl;
+  //   }
+  // }
 
   return 0;
 }

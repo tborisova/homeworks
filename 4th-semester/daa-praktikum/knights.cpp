@@ -60,30 +60,30 @@ int bfs(point start) {
 }
 
 int main(){
-	int path_counts[MAXN];
-	int max = 0;
-	scanf("%d %d %d", &n, &holes_size, &bottles_size);
-	int x, y, sum = 0;
+  int path_counts[MAXN];
+  int max = 0;
+  scanf("%d %d %d", &n, &holes_size, &bottles_size);
+  int x, y, sum = 0;
 
-    for(int i = 0; i < n;i++){
-      for (int j = 0; j < n; j++)
-      {
-        board[i][j] = '.';
-      }
+  for(int i = 0; i < n;i++){
+    for (int j = 0; j < n; j++)
+    {
+      board[i][j] = '.';
     }
-	for(int i = 0; i < holes_size; i++){
-		scanf("%d %d", &x, &y);
-		visited[x][y] = true;
-	}
+  }
+  for(int i = 0; i < holes_size; i++){
+    scanf("%d %d", &x, &y);
+    visited[x][y] = true;
+  }
 
-	for(int i = 0; i < bottles_size; i++){
-		scanf("%d %d", &x, &y);
-           board[x][y] = 'B';
-	}
+  for(int i = 0; i < bottles_size; i++){
+    scanf("%d %d", &x, &y);
+   board[x][y] = 'B';
+  }
 
-	scanf("%d %d", &ella_x, &ella_y);
+  scanf("%d %d", &ella_x, &ella_y);
 
-	bfs(point(ella_x, ella_y));
+  bfs(point(ella_x, ella_y));
       cout << bottles_reached << " " << *max_element(bottles_dist, bottles_dist + bottles_size) << endl;
-	return 0;
+  return 0;
 }

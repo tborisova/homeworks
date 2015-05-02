@@ -9,7 +9,6 @@ using namespace std;
 int main(){
   string str;
 
-  // string word = "bazinga";
   map<char, int> word;
 
   word['b'] = 0;
@@ -19,23 +18,24 @@ int main(){
   word['n'] = 0;
   word['g'] = 0;
   
+  
     while(cin >> str){
       for(int i = 0; i < str.size(); i++){
-        word[(char)tolower(str[i])]++;
+        word[tolower(str[i])]++;
       }
     }
-    int array[6] = { word['b'], word['a'], word['z'], word['i'], word['n'],word['g']};
 
-    // for(int i = 0; i < 7; i++){
-    //   cout << array[i] << endl;
-    // }
-    int min = *min_element(array, array + 6);
-    
-    while(word['a'] > 2*min && min > 0){
-      min--;
+
+    int array[5] = { word['b'], word['z'], word['i'], word['n'],word['g']};
+
+    int min = *min_element(array, array + 5);
+
+    word['a'] /= 2;
+    // min = word['a'];
+
+    if(min > word['a']){
+      cout << word['a'] << endl;
+    }else{
+      cout << min << endl;
     }
-
-    cout << min << endl;
-  
-  // }
 }

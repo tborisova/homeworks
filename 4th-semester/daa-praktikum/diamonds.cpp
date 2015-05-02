@@ -3,15 +3,14 @@
 #include <iostream>
 using namespace std;
 
-#define N 1000
-#define M 10
-vector<int> neighbours[M];
+#define N 1001
+vector<int> neighbours[N];
 bool visited[N] = {false};
 int n, cycl = 0;
 
-void dfs(int current)
+void dfs(int current, int parent)
 {
-  visited[current] = true;
+      visited[current] = true;
 
   for (int i = 0; i < neighbours[current].size(); i++)
   { 
@@ -22,6 +21,7 @@ void dfs(int current)
           return;
     }else if (!visited[next]){
       dfs(next, current);
+      // visited[current] = false;
     }
   }
 }
@@ -31,7 +31,7 @@ void dfsGraph(int test)
   for (int i = 1; i <= n; i++)
   {
     if(!visited[i]){
-      dfs(i);
+      dfs(i, - 1);
       if(cycl) break;
     }
   }
@@ -46,15 +46,16 @@ void dfsGraph(int test)
 
 void clean(){
 
-    for(int i = 1; i <= n; i++){
+    for(int i = 1; i < n + 1; i++){
       visited[i] = false;
     }
-    for (int j = 1; j <= n; j++)
+    for (int j = 1; j < n + 1; j++)
     { 
       while(!neighbours[j].empty()){
         neighbours[j].pop_back();
       }
     }
+    cycl = 0;
 }
 
 int main()
@@ -69,10 +70,9 @@ int main()
     for (int j = 1; j < n + 1; j++)
     {
       scanf("%d", &neighbours_count);
-      while(neighbours_count > 0){
+      for(int i = 0; i < neighbours_count; i++){
         scanf("%d", &i1);
         neighbours[j].push_back(i1);
-        neighbours_count--;
       }
     }
     
