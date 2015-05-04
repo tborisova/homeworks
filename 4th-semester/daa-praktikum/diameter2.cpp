@@ -14,59 +14,20 @@ vector<pair<int, int> > neighbours[N];
 int dist[N];
 bool visited[N] = { 0 };
 int parent[N];
-
-int dijkstra(int s, int e)
-{
-  priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
-
-  for (int i = 1; i <= n; i++)
-  {
-    dist[i] = INF;
-    parent[i] = -1;
-  }
-  dist[s] = 0;
-  pq.push(pair<int, int>(0, s));
-
-  while (!pq.empty())
-  {
-    int current = pq.top().second;
-    pq.pop();
-    if (visited[current])
-      continue;      
-    if (current == e)
-      break;
-
-    visited[current] = 1;
-    for (int i = 0; i < neighbours[current].size(); i++)
-    {
-      int next = neighbours[current][i].first;
-      int edge = neighbours[current][i].second;
-      if (!visited[next])
-      {
-        if (dist[next] > dist[current] + edge)
-        {
-          dist[next] = dist[current] + edge;
-          parent[next] = current;
-          pq.push(pair<int, int>(dist[next], next));
-        }
-      }
-    }
-
-  }
-  if (dist[e] == INF)
-    return -1;
-  return dist[e];
-}
+int maxp= 0, new_val = 1;
 
 int dfs(int x, int dist){
 
-    if(dist > maxp) maxp = dist;
-    
+    if(dist > maxp){
+      maxp = dist;
+      new_val = x;
+    }
     for(int i = 0; i < neighbours[x].size(); i++){
-        if(!visited[nx][ny]){
-          visited[nx][ny] = true;
-          dfs(nx, ny, dist+board[nx][ny]);
-          visited[nx][ny] = false;
+        int next = neighbours[x][i].first;
+        if(!visited[next]){
+          visited[next] = true;
+          dfs(next, dist+neighbours[x][i].second);
+          visited[next] = false;
         }
     }
   
@@ -86,9 +47,7 @@ int main()
     neighbours[v2].push_back(pair<int, int>(v1, weight));
   }
 
-  dijkstra(1);
-
-  cout << *max_element(dist + 1, dist + n + 1) << endl;
-
+  dfs(1, 0);
+  cout << dfs(new_val, 0) << endl;
   return 0;
 }

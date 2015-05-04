@@ -11,7 +11,7 @@ bool visited[MAXN];
 
 void dfs(int street,  int length, int parent){
   if(maxpath < length) maxpath = length;
-  if(maxpath == 999*m) return;
+  if(maxpath >= 999*m) return;
   for(int i = 0; i < neighbours[street].size(); i++){
     int next = neighbours[street][i].first;
     if(!visited[next] && parent != next){
