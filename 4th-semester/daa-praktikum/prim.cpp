@@ -3,6 +3,7 @@
 #include<cstdio>
 #include<vector>
 #include<queue>
+#include <iostream>
 #include <functional>
 #include <climits>
 
@@ -76,7 +77,7 @@ long long prim(int s)
 int main()
 {
 	scanf("%d%d", &n, &m);
-
+	int sum = 0;
 	int v1, v2, weight;
 	for (int i = 0; i < m; i++)
 	{
@@ -84,8 +85,10 @@ int main()
 		// Multiple edges from v1 to v2 are not a problem - all will be considered
 		neighbours[v1].push_back(pair<int, int>(v2, weight));
 		neighbours[v2].push_back(pair<int, int>(v1, weight));  // If undirected graph
+		sum += weight;
 	}
 
+	cout <<  sum << endl;
 	// Choose a random vertex as root
 	printf("%lld\n", prim(1));
 

@@ -31,7 +31,9 @@ int main(){
   int index = 0;
   for(int i = 1; i <= n - 1; i++){
     for(int j = n; j >= i+ 1; j--){
-      if(gdc(i, j) == 1){
+      cout << j << " " << i << " " << j % i << endl;
+      if(j % i != 0){
+        cout << i << " " << j << endl;
         fractions[index].num = i;
         fractions[index].den = j;
         index++;

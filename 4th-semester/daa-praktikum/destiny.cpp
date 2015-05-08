@@ -23,7 +23,7 @@ struct point {
 int  n, end_x = 0, end_y = 7, start_x = 7, start_y = 0;
 char board[MAXN][MAXN];
 bool visited[MAXN][MAXN];
-bool done = false;
+bool done = false, dead = false;
 
 
 void printBoard(){
@@ -46,6 +46,11 @@ void make_move(point new_position, point old_position){
         }else if(i != 7 && board[i][j] == 'T'){
           board[i][j] = '.';
           board[i+1][j] = 'T';
+          if(new_position.x == i+1 && new_position.y == j){
+              dead = true;
+              done = true;
+              return;
+            }
         }
       }
   }
@@ -59,7 +64,6 @@ void go_back(point new_position, point old_position){
       for(int j = 0; j < 8; j++){
           if(board[i][j] == 'T'){
             board[i-1][j] = 'T';
-            // board[i][j] = '.';
           }
       }
   }
@@ -74,6 +78,17 @@ bool empty_board(){
 
   return true;
 }
+
+bool no_more_t(point current){
+  for(int i = current.x; i >= 0; i--){
+    for(int j = current.y; j >= 0; j--){
+      if(board[i][j] == 'T') return false;
+    }
+  }
+
+  return true;
+}
+
 void dfs(point start, point end){
 
   if(start == end){
@@ -81,25 +96,24 @@ void dfs(point start, point end){
     return;
   }
 
-  if(empty_board()){
+  if(board[start.x][start.y] == 'T') return;
+
+  if(no_more_t(start)){
     done = true;
     return;
   }
 
-  // cout << start.x << " " << start.y << endl;
-  // printBoard();
-  int dx[9] = {-1, -1, -1, 0, 0, 1, 1, 1,1};
+  int dx[9] = {-1, -1, -1, 0, 0, 1, 1, 1, 1};
   int dy[9] = {-1, 0, 1, -1, 0, 1, -1, 0 ,1};
 
   for (int i = 0; i < 9; i++){
     int nx = dx[i] + start.x;
     int ny = dy[i] + start.y;
-    // cout << "new " << nx << " " << ny << endl;
-    if(nx >= 0 && nx  <= 7 && ny >= 0 && ny <= 7 &&  (nx-1) >=0 && (nx-1) <=7 && !visited[nx][ny] && board[nx-1][ny] != 'T' && board[nx][ny] != 'T'){
+    if(nx >= 0 && nx  <= 7 && ny >= 0 && ny <= 7 &&  (nx - 1) >= 0 && (nx-1) <=7 && !visited[nx][ny]  && board[nx][ny] != 'T' && board[nx-1][ny] != 'T'){
       visited[nx][ny] = true;
       make_move(point(nx, ny), start);
       dfs(point(nx, ny), end);
-      go_back(point(nx, ny),start);
+      go_back(point(nx, ny), start);
       visited[nx][ny] = false;
     }
   }
@@ -135,7 +149,7 @@ int main()
 		// printBoard();
             dfs(point(start_x, start_y), point(end_x, end_y));
 		
-            if(!done){
+            if(dead){
 			cout << "Dead" << endl;
 		} else{
 			cout << "Alive" << endl;

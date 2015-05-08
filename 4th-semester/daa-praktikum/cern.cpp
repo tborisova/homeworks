@@ -1,35 +1,32 @@
 #include <iostream>
 #include <cstdio>
-#include <string>
-
+#include <cstring>
 using namespace std;
 
-string arr[10000];
-
-int n;
 
 int main(){
-
+  char arr[10000][10000001];
+  int n;
+  char min[10000001];
   scanf("%d", &n);
 
-  string min;
-
   for(int i = 0; i < n; i++) {
-    scanf("%d", &arr[i]);
+    cin >> min;
+    strcpy(arr[i], min);
   }
 
   for(int i = 0; i < n - 1; i++){
     for(int j = i + 1; j < n; j++){
-      if(arr[j] < arr[i]){
-        min = arr[i];
-        arr[i] = arr[j];
-        arr[j] = min;
+      if(strcmp(arr[j], arr[i]) < 0){
+        strcpy(min, arr[i]);
+        strcpy(arr[i], arr[j]);
+        strcpy(arr[j], min);
       }
     }
   }
 
   for(int i = 0; i < n; i++) {
-    printf("%d\n", arr[i]);
+    cout << arr[i] << endl;
   }
 
   return 0;

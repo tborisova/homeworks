@@ -1,12 +1,13 @@
 #include <iostream>
+#include <cstdio>
 using namespace std;
 
 int counter = 0;
 
-void merge(int a[], int l, int mid, int h){
+int merge(int a[], int l, int mid, int h){
   int n1 = mid - l;
   int n2 = h - (mid + 1);
-
+  int inv_count = 0;
   int left[n1 + 1];
   int rigth[n2 + 1];
 
@@ -24,6 +25,7 @@ void merge(int a[], int l, int mid, int h){
 
   for(int k = l; k <= h; k++){
     if(left[i] <= rigth[j]){
+      inv_count += (n1 - i);
       a[k] = left[i];
       i++;
     }else{
@@ -31,16 +33,20 @@ void merge(int a[], int l, int mid, int h){
       j++;
     }
   }
+
+  return inv_count;
 }
 
-void merge_sort(int a[], int l, int h){
-  int mid;
+int merge_sort(int a[], int l, int h){
+  int mid, inversions = 0;
   if(l < h){
     mid = (l+h)/2;
-    merge_sort(a, l, mid);
-    merge_sort(a, mid+1, h);
-    merge(a, l, mid, h);
+    inversions = merge_sort(a, l, mid);
+    inversions += merge_sort(a, mid+1, h);
+    inversions += merge(a, l, mid, h);
   }
+
+  return inversions;
 }
 
 int main(){
@@ -53,7 +59,6 @@ int main(){
     scanf("%d", &a[i]);  
   }
 
-  merge_sort(a, 0, n - 1);
-cout << counter;
+  cout <<  merge_sort(a, 0, n - 1) << endl;
   return 0;
 }

@@ -6,8 +6,8 @@
 
 using namespace std;
 
-#define INF 2001
-#define N 10001
+#define INF 20010
+#define N 10002
 
 int n, m;
 vector<pair<int, int> > neighbours[N];
@@ -30,14 +30,17 @@ int dijkstra(int s)
   {
     int current = pq.top().second;
     pq.pop();
+    visited[current] = 1;
+
     for (int i = 0; i < neighbours[current].size(); i++)
     {
       int next = neighbours[current][i].first;
       int edge = neighbours[current][i].second;
-      if (dist[next] > dist[current] + edge){
-          dist[next] = dist[current] + edge;
-          pq.push(pair<int, int>(dist[next], next));
-      }
+      if(!visited[next] || s == next)
+        if (dist[next] > dist[current] + edge){
+            dist[next] = dist[current] + edge;
+            pq.push(pair<int, int>(dist[next], next));
+        }
     }
   }
   return 1;
@@ -46,42 +49,47 @@ int dijkstra(int s)
 int main()
 {
   int s, e;
-  int hospitals[100], h;
+  int hospitals[101], h;
   cin >> n >> m >> h;
 
-  for(int i = 1; i <=n; i++) objects[i] = 0;
+  if(m != 0){
+    for(int i = 1; i <=n; i++) objects[i] = 0;
 
-  for(int i = 0; i< h;i++){
-    cin >> hospitals[i];
-    objects[hospitals[i]] = 1;
-  }
-
-  int v1, v2, weight;
-  for (int i = 0; i < m; i++)
-  {
-    cin >> v1 >> v2 >> weight;
-    cout << v1 << " " << v2 << " " << weight << endl;
-    neighbours[v1].push_back(pair<int, int>(v2, weight));
-    neighbours[v2].push_back(pair<int, int>(v1, weight));
-  }
-
-  int sum = 0;
-  int minSum = INF;
-
-  for(int i =0; i < h;i++){
-   
-    dijkstra(hospitals[i]);
-    sum = 0; 
-    for(int j = 1; j <= n; j++){
-      if(objects[j] != 1){
-        cout << "path from " <<  hospitals[i] << " to  " << j << " is " << dist[j] << endl;
-        sum += dist[j];
-      }
+    for(int i = 0; i< h;i++){
+      cin >> hospitals[i];
+      objects[hospitals[i]] = 1;
     }
 
-    if(minSum > sum) minSum = sum;
+    int v1, v2, weight;
+    for (int i = 0; i < m; i++)
+    {
+      cin >> v1 >> v2 >> weight;
+      neighbours[v1].push_back(pair<int, int>(v2, weight));
+      neighbours[v2].push_back(pair<int, int>(v1, weight));
+    }
+
+    int sum = 0;
+    int minSum = INF;
+
+    for(int i =0; i < h;i++){
+      for(int j = 1; j <= n; j++){
+        visited[j] = false;
+      }
+      dijkstra(hospitals[i]);
+      sum = 0; 
+      for(int j = 1; j <= n; j++){
+        if(objects[j] != 1){
+          sum += dist[j];
+        }
+      }
+
+      if(minSum > sum) minSum = sum;
+    }
+    
+    cout << minSum << endl;
+  }else{
+    cin >> h;
+    cout << 1 << endl;
   }
-  
-  cout << minSum << endl;
   return 0;
 }

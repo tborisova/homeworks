@@ -1,51 +1,49 @@
-#include <cstdio>
-#include <vector>
-#include <queue>
-#include <iostream>
+#include<cstdio>
+#include<vector>
 using namespace std;
 
 #define N 500
 vector<int> neighbours[N];
 bool visited[N];
-int n, counter = 0;
-int pred[N] = {-1};
+int n;
 
-void bfs(int current)
+void dfs(int current)
 {
   visited[current] = 1;
-  queue<int> elements;
-  elements.push(current);
+  for (int i = 0; i < neighbours[current].size(); i++)
+  {
+    int next = neighbours[current][i];
+    if (!visited[next])
+      dfs(next);
+  }
+}
 
-  while(!elements.empty()){
-    int next = elements.front();
-    elements.pop();
-    cout << next << endl;
-    for(int i = 0; i < neighbours[next].size(); i++){
-      next = neighbours[current][i];
-      if(!visited[next]){
-        elements.push(next);
-        visited[next] = 1;
-        counter++;
-      }
+int dfsGraph()
+{
+  int componentsCount = 0;
+  for (int i = 1; i <= n; i++)
+  {
+    if (!visited[i])
+    {
+      dfs(i);
+      componentsCount++;
     }
   }
+
+  return componentsCount;
 }
 
 int main()
 {
   int m, i1, i2;
   scanf("%d%d", &n, &m);
-  for(int j = 1; j < m+1; j++){
+  for (int j = 0; j < m; j++)
+  {
     scanf("%d%d", &i1, &i2);
     neighbours[i1].push_back(i2);
     neighbours[i2].push_back(i1);
   }
 
-  for(int j = 1; j < m + 1; j++){
-    bfs(neighbours[j][0]);
-  }
-
-
-  printf("%d\n", counter);
+  printf("%d\n", dfsGraph());
   return 0;
 }

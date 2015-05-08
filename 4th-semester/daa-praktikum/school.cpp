@@ -19,10 +19,6 @@ void bfs(int i){
         visited[x[j]] = 1;
       }
     }
-    // za vseki sused 
-    // proverqvame dali ne e poseten
-    // slagame go v queueu
-    // mark visited
   }
 }
 

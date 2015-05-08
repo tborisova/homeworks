@@ -1,40 +1,53 @@
 #include <iostream>
-#include <string>
+#include <cstring>
+#include <map>
 using namespace std;
 
 int main(){
-  long n;
+  long long n;
   string str;
-  int letters[260] = {};
-
+  map<char, int> letters;
   cin >> n >> str;
+
+  for(char ch = '0'; ch <= '9'; ch++){
+      letters[ch] = 0;
+  }
+  
+  for(char ch = 'a'; ch <= 'z'; ch++){
+    letters[ch] = 0;
+  }
+
+  for(char ch = 'A'; ch <= 'Z'; ch++){
+    letters[ch] = 0;
+  }
 
   for(int i = 0; i < n;i++){
     letters[str[i]]++;
   }
 
+  int i = 0;
   for(char ch = '0'; ch <= '9'; ch++){
     while(letters[ch] != 0){
-      cout << ch;
+      str[i++] = ch;
       letters[ch]--;
     }
   }
   
   for(char ch = 'a'; ch <= 'z'; ch++){
     while(letters[ch] != 0){
-      cout << ch;
+      str[i++] = ch;
       letters[ch]--;
     }
   }
 
   for(char ch = 'A'; ch <= 'Z'; ch++){
     while(letters[ch] != 0){
-      cout << ch;
+      str[i++] = ch;
       letters[ch]--;
     }
   }
 
-  cout << endl;
+  cout << str << endl;
   
   return 0;
 }

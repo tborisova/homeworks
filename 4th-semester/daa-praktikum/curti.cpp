@@ -1,75 +1,102 @@
-#include<iostream>
+/* Prim
+*/
+#include<cstdio>
 #include<vector>
 #include<queue>
+#include <iostream>
 #include <functional>
 #include <climits>
 
 using namespace std;
 
-#define INF INT_MAX / 2
-#define N 50001
+#define INF INT_MAX
+#define N 1001
 
+int a[N][N];
 int n, m;
-vector<pair<int, int> > neighbours[N];
-int dist[N], maxDist = 0;
+vector<pair<int, int> > neighbours[N]; // Successors list: neighbours[from].push_back(to, edgeWeight)
+int dist[N];
 bool visited[N] = { 0 };
 
-int dijkstra(int s, int e)
+// Find the MST with root vertex s
+int prim(int s)
 {
-  priority_queue<pair<int, int>, vector< pair<int, int> >, less<pair<int, int> > > pq;
+  // By default, priority queue uses less comparator (max heap).
+  // We need min heap => greater
+  // By default, pairs are sorted by first coordinate, then by second.
+  // => (dist[v], v)
+  priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
 
+  // ! If vertex indexes are from {1, .. n}
   for (int i = 1; i <= n; i++)
   {
-    dist[i] = 1;
+    dist[i] = INF;
   }
-  dist[s] = 1;
+  dist[s] = 0;
   pq.push(pair<int, int>(0, s));
+  int verticesCount = 0;
+  int maxEdge = 0;
 
   while (!pq.empty())
   {
     int current = pq.top().second;
     pq.pop();
-    if (visited[current])
-      continue; 
+    if (visited[current]) // We push multiple pairs with the same vertex, but different distances. 
+      continue;      // This vertex has already been popped (with shorter distance).
 
-    if (current == e){
-      break;
-    }
-
+    // Important: mark vertices as visited after popping, not before pushing.
+    // We continue updating the best distance for pushed vertices.
     visited[current] = 1;
+    verticesCount++;
+    if(maxEdge < dist[current]) maxEdge = dist[current];
+    if (verticesCount == n)
+      break;
+
     for (int i = 0; i < neighbours[current].size(); i++)
     {
       int next = neighbours[current][i].first;
       int edge = neighbours[current][i].second;
       if (!visited[next])
       {
-        if (dist[next] < dist[current]*edge)
+        if (dist[next] > edge)
         {
-          dist[next] = dist[current]*edge;
+          dist[next] = edge;
           pq.push(pair<int, int>(dist[next], next));
         }
       }
     }
-  }
 
-  return dist[e];
+  }
+  return maxEdge;
 }
 
 int main()
 {
-  int s, e, k;
-  cin >> n >> m; 
-
+  scanf("%d%d", &n, &m);
   int v1, v2, weight;
+
+  for(int i = 1; i <=n;i++)
+    for(int j = 1; j <=n;j++)
+      a[i][j] = 0;
+
   for (int i = 0; i < m; i++)
   {
-    cin >> v1 >> v2 >> weight;
-    neighbours[v1].push_back(pair<int, int>(v2, weight));
-    neighbours[v2].push_back(pair<int, int>(v1, weight));
+    scanf("%d%d%d", &v1, &v2, &weight);
+    a[v1][v2] = max(a[v1][v2], weight);
+    a[v1][v2] = max(a[v1][v2], a[v2][v1]);
+    a[v2][v1] = a[v1][v2];
   }
 
-  // dijkstra(1, n);
-  cout << dijkstra(1, n) << endl;
-  // cout << maxDist << endl;
+  for(int i = 1; i <= n; i++){
+    for(int j = 1; j <=n; j++){
+      if(a[i][j]){
+        neighbours[i].push_back(pair<int, int>(j, a[i][j]));
+        neighbours[j].push_back(pair<int, int>(i, a[i][j]));
+      }
+    }
+  }
+  // Choose a random vertex as root
+  printf("%d\n", prim(1));
+
   return 0;
 }
