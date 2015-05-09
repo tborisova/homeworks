@@ -1,58 +1,56 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
-#define N 300
+#define MAXN 300
+#define INF INT_MAX/2
 
-vector<pair<int, int> > neighbours[N];
-int visited[N];
 int n, m;
-int currentLen = 0, cycl =0, len = 0;
+vector<pair<int, int> > neighbours[MAXN];
+bool visited[MAXN];
+int dist[MAXN];
 
-void dfs(int start, int current, int parent, int vertexesCount, int weight){
-  if(current == start && vertexesCount >= 3){
-    cycl = 1;
-    len = weight;
-    return;
+int dijkstra(int start){
+  for(int i = 1; i <= n; i++){
+    dist[i] = INF;
   }
-  cout << current << " " << vertexesCount << " " << currentLen << endl;
-  for(int i = 0; i < neighbours[current].size(); i++){
-    int next = neighbours[current][i].first;
-    if(!visited[next]){
-      visited[next] = true;
-      cout << " here " << weight << " " << neighbours[current][i].second << endl;
-      dfs(start, next, current, vertexesCount + 1, weight + neighbours[current][i].second);
-      visited[next] = false;
-    }else if(visited[next] && start == current && vertexesCount >= 3){
-      cycl = 1;
-      len = weight;
-      return;  
+
+  dist[start] = 0;
+  priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
+
+  pq.push(pair<int, int>(0, s));
+
+  while(!pq.empty()){
+    int current = pq.top().first;
+  
+    if (visited[current])
+      continue;      
+
+    visited[current] = 1;
+    for(int i = 0; i < neighbours[current].size(); i++){
+      int next = neighbours[current][i].first;
+      int edge = neighbours[current][i].second;
+      
+      if(!visited[next]){
+        if(dist[next] > dist[current] + edge){
+          dist[next] = dist[current] + edge;
+          visited[next] = true;
+          pq.push(pair<int, int>(dist[next], next));
+        }
+      }
     }
   }
 }
 
 int main(){
-  int x, y, w;
   cin >> n >> m;
 
-  for(int i =0; i < m; i++){
-    cin >> x >> y >> w;
-    neighbours[x].push_back(pair<int, int>(y, w));
-    neighbours[y].push_back(pair<int, int>(x, w));
+  for(int i = 0; i < m; i++){
+    cin >> v1 >> v2 >> weight;
+    neighbours[v1].push_back(pair<int, int>(v2, weight));
+    neighbours[v2].push_back(pair<int, int>(v1, weight));
   }
-
-  int minLen = 0;
 
   for(int i = 1; i <=n; i++){
-    dfs(i, i, -1, 0, 0);
-    if(cycl){
-      if(minLen > len) minLen = len;
-      cycl = 0;
-      currentLen = 0;
-      len= 0;
-    }
-    for(int i =1; i <=n;i++) visited[i] = false;
+    dijkstra(i);
   }
-
-  cout << minLen << endl;
 }
