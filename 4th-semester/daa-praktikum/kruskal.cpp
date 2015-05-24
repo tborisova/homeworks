@@ -64,14 +64,34 @@ long long kruskal()
 
 int main()
 {
-	int x, y, weight;
-	cin >> n >> m;
-	for (int i = 0; i < m; i++)
-	{
-		cin >> x >> y >> weight;
-		edges[i] = { x, y, weight };
-	}
 
+	scanf("%d %d %d", &n, &m, &k);
+
+  for(int i = 0; i < n; i++){
+    cin >> cities[i];
+  }
+
+  int l = 0;
+
+  for(int i = 0; i < n - 1; i++){
+    for(int j = i + 1; j < n; j++){
+      if(i != j){
+        if(strncmp(cities[i],cities[j],m) == 0){
+          edges[l++] = {i, j, 1};
+          // neighbours[i].push_back(pair<int, int>(j, 1));
+          // neighbours[j].push_back(pair<int, int>(i, 1));
+        }else{
+          int counter = m;
+          for(int h = k ; h >= k-m; h--){
+            if(cities[i][h] != cities[j][h]) counter++;
+          }
+          edges[l++] = {i, j, counter};
+          // neighbours[i].push_back(pair<int, int>(j, counter));
+          // neighbours[j].push_back(pair<int, int>(i, counter));
+        }
+      }
+    }
+  }
 	cout << kruskal() << endl;
 
 	return 0;

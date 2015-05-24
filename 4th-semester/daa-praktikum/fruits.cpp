@@ -3,46 +3,45 @@
 #include <map>
 using namespace std;
 
-#define N 10000
+#define N 1000000
 
 int main(){
   long n, m;
-  long upper_bound = 0, count, fruit;
-  long fisrt_fruit = 1;
+  long upper_bound, count, fruit;
   long lower_bounds[N];
   long upper_bounds[N];
 
   cin >> n;
 
-  for(int i = 0; i < n; i++){
+  
+  cin >> upper_bound;
+  lower_bounds[0] = 1;
+  upper_bounds[0] = upper_bound;
+
+
+  for(int i = 1; i < n; i++){
     cin >> fruit;
-    upper_bound += fruit + 1;
-    lower_bounds[i] = fisrt_fruit;
-    upper_bounds[i] = upper_bound;
-    fisrt_fruit = upper_bound + 1;
+    lower_bounds[i] = upper_bound[i-1] + 1;
+    upper_bounds[i] = upper_bound[i-1] + fruit;
   }
 
-  
+  int left, right, mid;
   cin >> m;
   while(m){
     cin >> fruit;
-    long left = 0;
-    long right = n -1;
-    long mid;
-
+    left = 0;
+    right = n -1;
     while(left <= right){
-      mid = (left + right)/2;      
-      if(lower_bounds[mid] >= fruit && fruit <= upper_bounds[mid]){
+      mid = (left + right)/2;            
+      if(lower_bounds[mid] <= fruit && fruit <= upper_bounds[mid]){
         cout << mid + 1 << endl;
         break;
       }
+      if(lower_bounds[mid] > fruit){
+        right = mid - 1;
 
-      if(lower_bounds[mid] < fruit){
-        left = mid;
-      }
-
-      if(upper_bounds[mid] > fruit){
-        right = mid;
+      }else if(upper_bounds[mid] < fruit){
+        left = mid + 1;
       }
     }
 
