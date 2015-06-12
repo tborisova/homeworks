@@ -1,24 +1,38 @@
 #include <iostream>
 using namespace std;
 
-#define MAXN[91]
-int n;
+#define MAXN 100
+#define MAXK 11
+
+int beads[MAXN][2];
+int k;
+
+long long func(int n, int i){
+  if(n == 1 && i == 0) return 1;
+  if(n == 1 && i == 1) return k - 1;
+
+  if(beads[n][i] != 0){
+    return beads[n][i];
+  }
+  long long res;
+  if(i == 0){ // завършва на синьо
+    res = func(n-1, 1) % 1000000007;
+  }else{
+    res = (((func(n-1, 0) % 1000000007) + (func(n-1, 1) % 1000000007))*(k-1)) % 1000000007;    
+  }
+
+  beads[n][i] = res;
+  return res;
+}
 
 int main(){
+  int n;
 
-  neighbours["e"].push_back("0");
-  neighbours["e"].push_back("1");
+  scanf("%d %d", &n, &k);
 
-  neighbours["0"].push_back("00");
-  neighbours["0"].push_back("01");
-
-  neighbours["1"].push_back("10");
-  neighbours["1"].push_back("11");
-
-  while(cin >> n){
-    int limit = pow(2, n) - 1;
-    for(int i = 0; i <limit; i++){
-
-    }
+  for(int i = 0; i < n; i++){  
+    beads[i][0] = 0;
+    beads[i][1] = 0;
   }
+  cout << (((func(n, 1) % 1000000007) + (func(n, 0)) % 1000000007) %  1000000007)<< endl;
 }
