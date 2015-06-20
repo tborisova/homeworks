@@ -1,57 +1,45 @@
 #include <iostream>
+#include <algorithm>
 #include <cstdio>
 using namespace std;
 
+#define MAXN 10000
+
 int main(){
-  int tests, k, n, expected_k;
-  long tubes[10000], num, max;
+  int tests, n;
+  long k;
+  long tubes[MAXN];
+
   scanf("%d", &tests);
 
-  while(tests != 0){
+  while(tests){
+    scanf("%d %ld", &n, &k);
 
-    scanf("%d %d", &n, &k);
-
-    // scanf("%ld", &tubes[0]);
-    // max = tubes[0];
-
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i < n;  i++){
       scanf("%ld", &tubes[i]);
-      // if(max < tubes[i]) max = tubes[i];
     }
 
-    expected_k = 0;
-    bool found = false;
+    // sort(tubes, tubes + n);
+    int min = *min_element(tubes, tubes + n);
+    int max = *max_element(tubes, tubes + n);
 
-    sort(tubes, tubes + n);
-    max = tubes[0];
-    max_i = 0;
+    int mid = (min + max)/2;
+    int counter = 0;
 
-    while(max > 0){
-      found = false;
-
+    while(1){
+      counter = 0;
       for(int i = 0; i < n; i++){
-        num = tubes[i];
-        while(num > 0 && (num - max) >= 0 && expected_k < k){
-          num -= max;
-          expected_k++;
-          in_here++;
-        }
+        counter += (tubes[i]/mid);
       }
-
-      if(k == expected_k){
-        found = true;
+      if(counter < k){
+        mid = mid - (k-counter);
+      }else if(counter > k){
+        mid = mid + (k+counter);
+      }else{
         break;
-      }
-
-      max_i--;
-      expected_k = 0;  
+      }      
     }
-
-    if(found){
-      printf("%ld\n", max);      
-    }else{
-      printf("0\n");
-    }
+    cout << mid << endl;
     tests--;
   }
 }

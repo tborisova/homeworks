@@ -17,46 +17,22 @@ int main(){
   }
 
   sort(houses, houses + houses_count);
-
-  int max_distance = 0;
-  int mid_element = houses_count/cows_count;
-  int left_element = houses[0];
-  int rigth_element = houses[n-1];
-  int to_lookup = max(mid_element - left_element, rigth_element - mid_element);
-
-  int left = 0;
-  int righ = n-1;
-
-  // while(left <= righ){
-  //   int mid = (left + righ)/2;
-
-  //   if(mid )
-  // }
-  
-
-  // new
-  int parts = houses_count/cows_count;
-  if(parts == 2){
-    int left = 0;
-    int righ = n -1;
-    parts = 1;
-  }else{
-    int left = 0;
-    int righ = parts;
-  }
-
-  for(int i = 0; i < parts; i++){
-    int max_distance = 0;
-  
-    for(int i = 0, j = houses_count - 1; i < houses_count && j >= 0; i++, j--){
-      if(houses[j] - houses[i] > max_distance && j != i){
-        max_distance = houses[j] - houses[i];
-      }
+  int mid = (houses[houses_count-1] - houses[0]);
+  int counter;
+  while(1){
+    counter = 0;
+    cout << counter << " " << cows_count << " " << mid << endl;
+    for(int i = 0, j = houses_count - 1; i < houses_count && j >=0 ; i++, j--){
+      if(i != j && houses[j] - houses[i] == mid) counter+=2;
     }
-    
-    left = parts;
-    righ += parts;
+    cout << " counter is " << counter <<endl;
+    if(counter < cows_count){
+      mid = mid - (cows_count-counter);
+    }else if(counter > cows_count){
+      mid = mid + (cows_count+counter);
+    }else{
+      break;
+    }      
   }
-
-  cout << max_distance << endl;
+  cout << mid << endl;
 }
