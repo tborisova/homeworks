@@ -1,0 +1,1 @@
+drop(X, L, R) :- append(A, [X | B], L), append(A, B, R). 
