@@ -30,7 +30,6 @@ int main(int argc, char **argv){
 		close(1);
 		dup(fd);
 		close(fd);
-		exit(1);
 		execl("/usr/bin/who", "who", "-u", NULL);
 	}else if(pid < 0){
 		perror("error");
