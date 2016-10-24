@@ -1,112 +1,77 @@
+require 'pry'
 number = gets.chomp.to_i
 
-frogs = []
-visited = []
+$visited = Hash.new
+$start_frogs_string = ">"*number + "_" + "<"*number
+$expected_frogs_output = "<"*number + "_" + ">"*number
+$count = 1 + number*2
 
-start = 0
-end_frog = 2*number
+def get_neighbours(current_string)
+  index_of_blank = current_string.index('_')
+  neighbours = []
 
-start.upto(number - 1) do |frog|
-  frogs[frog] = '>'
+  if index_of_blank - 2  >= 0 && (current_string[index_of_blank - 2]) == '>'
+    s = current_string.dup
+    s[index_of_blank - 2] = '_'
+    s[index_of_blank] = '>'
+    neighbours << s
+  end
+
+  if index_of_blank + 2  <= $count && (current_string[index_of_blank + 2]) == '<'
+    s = current_string.dup
+    s[index_of_blank + 2] = '_'
+    s[index_of_blank] = '<'
+    neighbours << s
+  end
+
+  if index_of_blank - 1  >= 0 && (current_string[index_of_blank - 1]) == '>'
+    s = current_string.dup
+    s[index_of_blank - 1] = '_'
+    s[index_of_blank] = '>'
+    neighbours << s
+  end
+
+  if index_of_blank + 1  <= $count && (current_string[index_of_blank + 1]) == '<'
+    s = current_string.dup
+    s[index_of_blank + 1] = '_'
+    s[index_of_blank] = '<'
+    neighbours << s
+  end
+
+  neighbours
 end
 
-frogs[number] = ' '
+$lines = []
 
-(number + 1).upto(end_frog) do |frog|
-  frogs[frog] = '<'
-end
-
-# def dfs(frogs, frog)
-#   s = []
-#   s << frog
-
-#   while s.size > 0
-#     frog = s.last
-#     if !visited[frog]
-#       visited[frog] = true
-#       if frogs[frog+1] == ' '
-#         s << frog + 1
-#       end
-#     end
-#   end
-# end
-
-
-# > > _ < <
-# 1 2 3 4 5
-
-#   3
-# 2   4
-
-
-# dfs()
-
-# def dfs(frog)
-#   visited[frog] = true
-
-
-# end
-
-
-
-# void dfs(int current)
-# {
-#   visited[current] = 1;
-#   for (int i = 0; i < neighbours[current].size(); i++)
-#   {
-#     int next = neighbours[current][i];
-#     if (!visited[next])
-#       dfs(next);
-#   }
-# }
-def dfs(frogs, current_frog, visited, end_frog)
+def dfs(current_string)
   s = []
-  s << current_frog
-  while !s.empty?
-    current_frog = s.last
-    if !visited[current_frog]
-      p 'dddd'
-      p frogs[current_frog]
-      if frogs[current_frog] == ' '
-        s << current_frog - 1 if current_frog - 1 >= 0
-        s << current_frog + 1 if current_frog + 1 <= end_frog
-      else
-        s << current_frog - 1 if current_frog - 1 >= 0 && frogs[current_frog - 1] == ' '
-        s << current_frog + 1 if current_frog + 1 <= end_frog && frogs[current_frog + 1] == ' '
+  s << current_string
+  while s.size > 0
+    string = s.pop
+
+    if final_output_is_reached?(string)
+      $lines << string
+      return
+    end
+
+    if $visited[string] != true
+      $visited[string] = true
+      $lines << string
+      neighbours = get_neighbours(string)
+      neighbours.each do |neighbour|
+        s << neighbour
       end
     end
   end
 end
 
-def final_output_is_reached?(start, frogs, end_frog,   number)
-  res1 = start.upto(number - 1).select do |frog|
-    frogs[frog] == '>'
-  end
 
-  res2 = (number + 1).upto(end_frog) do |frog|
-    frogs[frog] == '<'
-  end
-  p 'dddd'
-  p res1
-  p res2
-  res1.empty? && res2.empty?
+def final_output_is_reached?(string)
+  string == $expected_frogs_output
 end
 
-num = 0
-while !final_output_is_reached?(start, frogs, end_frog, number)
-  start.upto(end_frog) do |i|
-    visited[i] = false
-  end
-  p frogs
-  dfs(frogs, num, visited, end_frog)
-  p "\n"
-  if num < end_frog
-    num = num + 1
-  else
-    num = 0
-  end
+dfs($start_frogs_string)
+
+$lines.each do |line|
+  p line
 end
-
-
-
-
