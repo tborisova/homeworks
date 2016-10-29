@@ -69,9 +69,8 @@ def a_star_search(start, goal):
     frontier = PriorityQueue()
     frontier.put((0, start))
     came_from = {}
-    cost_so_far = {}
+    cost = {}
     came_from[to_string(start)] = None
-    cost_so_far[to_string(start)] = 0
     visited[to_string(start)] = False
     counter = 0
     result = []
@@ -84,10 +83,10 @@ def a_star_search(start, goal):
             break
         
         for (next, step) in neighbors(current): # get all possible states
-            new_cost = cost_so_far.get(to_string(current), 0) + 1 
-            if to_string(next) not in cost_so_far or new_cost < cost_so_far[to_string(next)]:
-                cost_so_far[to_string(next)] = new_cost
-                priority = new_cost + heuristic(goal, next)
+            priority = heuristic(goal, next)
+            if visited.get(to_string(next), False) == False or cost[to_string(next)] > priority:
+                visited[to_string(next)] = True
+                cost[to_string(next)] = priority
                 frontier.put((priority, next))
                 came_from[to_string(next)] = step
     
@@ -99,4 +98,3 @@ print(counter - 1)
 for el in reversed(path):
   if el != None:
     print(el)
-# print(path)
