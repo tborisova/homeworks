@@ -47,5 +47,11 @@ def dfs(current_string):
 
 dfs(start_frogs_string)
 
+first_line = lines.pop(0)
+
 for line in lines:
-  print(line)
+  if line in get_neighbours(first_line):
+    print(first_line)
+  first_line = line
+
+print(expected_frogs_output)

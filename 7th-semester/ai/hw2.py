@@ -5,6 +5,7 @@ count_of_cols = int(number/2 - 1)
 
 expected_matrix = [[0 for x in range(count_of_rows)] for y in range(count_of_cols)]
 actual_matrix = [[0 for x in range(count_of_rows)] for y in range(count_of_cols)]
+visited = [[False for x in range(count_of_rows)] for y in range(count_of_cols)]
 
 start = 1
 end = count_of_rows + 1
@@ -23,7 +24,7 @@ print(actual_matrix)
 def count_h_and_indices(num_row, num_col):
   number = actual_matrix[num_row][num_col]
   [(row_of_number, col_of_number)] = [(index, row.index(number)) for index, row in enumerate(expected_matrix) if number in row]
-  heuristic = abs(row_of_number - col_of_number) + abs(num_row + num_col)
+  heuristic = abs(row_of_number - num_row) + abs(col_of_number + num_col)
   return (num_row, num_col, heuristic)
 
 zero = 0
@@ -60,9 +61,12 @@ while actual_matrix != expected_matrix:
     
   (num_row, num_col, _) = min(data, key = lambda t: t[2])
 
-  actual_matrix[row_of_zero][col_of_zero] = actual_matrix[num_row][num_col]
-  actual_matrix[num_row][num_col] = 0
 
+  if visited[row_of_zero][col_of_zero] == False:
+    actual_matrix[row_of_zero][col_of_zero] = actual_matrix[num_row][num_col]
+    actual_matrix[num_row][num_col] = 0
+    visited[row_of_zero][col_of_zero] = True
+    
   print(actual_matrix)
 
     
