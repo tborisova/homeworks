@@ -21,12 +21,12 @@ expected_matrix[count_of_cols - 1][count_of_rows - 1] = 0
 
 actual_matrix = [[int(input()) for x in range(count_of_rows)] for y in range(count_of_cols)]
 
-def index_of_zero(table):
-  [(row_of_zero, col_of_zero)] = [(index, row.index(0)) for index, row in enumerate(table) if 0 in row]
-  return [(row_of_zero, col_of_zero)]
+def index_of_zero(table, number):
+  [(row_of_zero, col_of_zero)] = [(index, row.index(number)) for index, row in enumerate(table) if number in row]
+  return (row_of_zero, col_of_zero)
 
 def neighbors(current_table):
-  [(row_of_zero, col_of_zero)] = index_of_zero(current_table)
+  (row_of_zero, col_of_zero) = index_of_zero(current_table, 0)
 
   result = []
   if row_of_zero - 1 >= 0: # up
@@ -60,14 +60,35 @@ def to_string(table):
       result += str(el)
   return result
 
+result1 = []
+for x in range(number):
+  result1.insert(x, index_of_zero(expected_matrix, x+1))
+
 def heuristic(a, b):
-    [(x1, y1)] = index_of_zero(a)
-    [(x2, y2)] = index_of_zero(b)
-    return abs(x1 - x2) + abs(y1 - y2)
+    result2 = []
+    distance = 0
+
+    for x in range(number):
+      result2.insert(x, index_of_zero(b, x+1))
+    
+    for x in range(number):
+      (x1, y1) = result1[x]
+      (x2, y2) = result2[x]
+
+      distance += abs(x1 - x2) + abs(y1 - y2)
+
+    return distance
+
+def reconstruct_path(came_from, current):
+    total_path = [current]
+    for current in came_from.keys():
+        current = came_from[current]
+        total_path.append(current)
+    return total_path
 
 def a_star_search(start, goal):
     frontier = PriorityQueue()
-    frontier.put((0, start))
+    frontier.put((0, start, 0))
     came_from = {}
     cost = {}
     came_from[to_string(start)] = None
@@ -76,25 +97,23 @@ def a_star_search(start, goal):
     result = []
 
     while not frontier.empty():
-        _, current = frontier.get()
-        result.append(came_from[to_string(current)])
-        counter += 1
-        if current == goal: # if table is the final 
-            break
-        
-        for (next, step) in neighbors(current): # get all possible states
-            priority = heuristic(goal, next)
-            if visited.get(to_string(next), False) == False or cost[to_string(next)] > priority:
-                visited[to_string(next)] = True
-                cost[to_string(next)] = priority
-                frontier.put((priority, next))
-                came_from[to_string(next)] = step
+      _, current, level = frontier.get()
+      result.append(came_from[to_string(current)])
+      counter += 1
+      if current == goal: # if table is the final 
+        return reconstruct_path(came_from, current)
+
+      for (next, step) in neighbors(current): # get all possible states
+          priority = heuristic(goal, next)
+          if visited.get(to_string(next), False) == False or cost[to_string(next)] >= priority + level:
+              visited[to_string(next)] = True
+              cost[to_string(next)] = priority + level
+              frontier.put((priority, next, level + 1))
+              came_from[to_string(next)] = step
     
-    return counter, result
 
-counter, path = a_star_search(actual_matrix, expected_matrix)
+path = a_star_search(actual_matrix, expected_matrix)
 
-print(counter - 1)
-for el in reversed(path):
-  if el != None:
-    print(el)
+print(len(path))
+for x in path:
+  print(x)

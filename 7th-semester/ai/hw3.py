@@ -15,114 +15,96 @@ def generate_field(number):
   return field
 
 def print_field(field):
-  for row in field:
-    print(row)
-
-def count_in_row(row, col, field):
-  res = sum([1 for x in range(0, number) if field[x][col] == '*'])
-  return res - 1
-
-def count_in_col(row, col, field):
-  res = sum([1 for x in range(0, number) if field[row][x] == '*'])
-  return res - 1
-
+  print(' ')
+  for i in range(len(field[1])):  # Make it work with non square matrices.
+    print(i)
+  print
+  for i, element in enumerate(field):
+        print(i, ' '.join(element))
+        
 def count_in_diag(row, col, field):
   res = 0
-
-  for x in range(row-1, number):
-    for y in range(col-1, number):
-      if field[x][y] == '*':
+  if row - 1 >= 0 and col - 1 >= 0:
+    temp_row = row - 1
+    temp_col = col - 1
+    while temp_row >= 0 and temp_col >= 0:
+      if field[temp_row][temp_col] == '*':
         res += 1
+      temp_row = temp_row - 1
+      temp_col = temp_col - 1
 
-  for x in range(row+1, number):
-    for y in range(col-1, number):
-      if field[x][y] == '*':
+  if row + 1 < number and col - 1 >= 0:
+    temp_row = row + 1
+    temp_col = col - 1
+    while temp_row < number and temp_col >= 0:
+      if field[temp_row][temp_col] == '*':
         res += 1
+      temp_row = temp_row + 1
+      temp_col = temp_col - 1
 
-  for x in range(row+1, number):
-    for y in range(col+1, number):
-      if field[x][y] == '*':
+  if row + 1 < number and col + 1 < number:
+    temp_row = row + 1
+    temp_col = col + 1
+    while temp_row < number and temp_col < number:
+      if field[temp_row][temp_col] == '*':
         res += 1
-
-  for x in range(row-1, number):
-    for y in range(col+1, number):
-      if field[x][y] == '*':
+      temp_row = temp_row + 1
+      temp_col = temp_col + 1
+    
+  if row - 1 >= 0 and col + 1 < number:
+    temp_row = row - 1
+    temp_col = col + 1
+    while temp_row >= 0 and temp_col < number:
+      if field[temp_row][temp_col] == '*':
         res += 1
-  return res
-
-def get_min_conflicts_by_row(field, column): 
-  result = PriorityQueue()
-  for row in range(number):
-    if field[row][column] == '*':
-      res = count_in_row(row, column, field) + count_in_col(row, colum, field) + count_in_diag(row, column, field)
-      result.put(row, res) # sorted by res
-
-  return result # should return the row    
-
-
-def is_solution(field):
-  for column in reversed(field):
-    result = get_min_conflicts_by_row(field, column)
-    return sum([1 for (row, res) in result if res != 0]) >= 1
-
-def count_left_right(index_row, field):
-  result = 0
-  result = sum([1 for index_col in range(number) if field[index_row][index_col] == '*'])
-  return result
-
-def count_down_up(index_col, field):
-  result = 0
-  result = sum([1 for index_row in range(number) if field[index_row][index_col] == '*'])
-  return result
-
-def count_in_diag(row, col, field):
-  res = 0
-  for x in range(row-1, number):
-    for y in range(col-1, number):
-      if field[x][y] == '*':
-        res += 1
-
-  for x in range(row+1, number):
-    for y in range(col-1, number):
-      if field[x][y] == '*':
-        res += 1
-
-  for x in range(row+1, number):
-    for y in range(col+1, number):
-      if field[x][y] == '*':
-        res += 1
-
-  for x in range(row-1, number):
-    for y in range(col+1, number):
-      if field[x][y] == '*':
-        res += 1
+      temp_row = temp_row - 1
+      temp_col = temp_col + 1
+    
   return res
 
 def get_columns_from_row_with_min_conflicts(field, index_row):
   result = PriorityQueue() # first element is the conflicts, the second  is the index of the column
+  res = 0
   for index_col in range(number):
-    res = count_left_right(index_row, field) + count_down_up(index_col, field) + count_in_diag(index_row, index_col, field)
-    result.put(res, index_col) # sorted by res
-
+    res = sum([1 for x in range(number) if field[index_row][x] == '*']) # настрани
+    res += sum([1 for x in range(number) if field[x][index_col] == '*']) # надолу и на горе
+    res += count_in_diag(index_row, index_col, field)
+    result.put((res, index_col))
   return result
 
+
+def is_solution(field):
+  for index_row, row in enumerate(field):
+    result = get_columns_from_row_with_min_conflicts(field, index_row)
+  while not result.empty():
+    _, x = result.get()
+    if x > 0:
+      return False
+  return True
 
 # while(is_solution(field) == False):
 field = generate_field(number)
 print_field(field)
 i = 0
-result = get_columns_from_row_with_min_conflicts(field, 0)
-while not result.empty():
-  print(result.get())
-# while i <= max_iter:
-#   for index_row, row in enumerate(field):
-#     i += 1
-#     columns_from_row_with_min_conflicts = get_columns_from_row_with_min_conflicts(field, index_row)[0]
-#     col_in_row_with_queen = [index_col for index_col, col in enumerate(row) if '*' in row][0]
-#     field[row][col_in_row_with_queen] = '_'
-#     field[row][columns_from_row_with_min_conflicts] = '*'
-#     if(is_solution(field) == True):
-#       print_field(field)
-#       break
+# result = get_columns_from_row_with_min_conflicts(field, 0)
+# for x in result:
+  # print(x)
+
+# for x in range(0, 3):
+  # print(x)
+while i <= max_iter:
+  for index_row, row in enumerate(field):
+    if '*' in row:
+      i += 1
+      _, columns_from_row_with_min_conflicts = get_columns_from_row_with_min_conflicts(field, index_row).get()
+      # print(columns_from_row_with_min_conflicts)
+      col_in_row_with_queen = [index_col for index_col, col in enumerate(row) if '*' == col][0]
+      field[index_row][col_in_row_with_queen] = '_'
+      field[index_row][columns_from_row_with_min_conflicts] = '*'
+      print("\n")
+      print(field)
+      # if(is_solution(field) == True):
+      #   print_field(field)
+      #   break
 
 
