@@ -1,0 +1,13 @@
+Невронни мрежи
+
+
+backward propagation - алгоритъм
+
+
+word2vec - за  чат бот
+numpy
+
+gensim
+scipy
+
+
