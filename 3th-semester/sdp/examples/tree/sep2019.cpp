@@ -1,8 +1,12 @@
+#include <stdlib.h>
+
 template <typename T>
 struct node{
   T inf;
   node *left, *right;
+  int left_edge, right_edge;
 };
+
 
 template <typename T>
 class tree{
@@ -87,6 +91,7 @@ template <typename T> node<T>* tree<T>::getRoot() const{
   return root;
 }
 
+
 template <typename T> T tree<T>::rootTree() const{
   return root->inf;
 }
@@ -106,10 +111,13 @@ template <typename T> tree<T> tree<T>::rightTree() const{
 template <typename T> void tree<T>::pr(const node<T>* p) const{
   if(p){
     pr(p->left);
+    // cout << p->left_edge << " ";
     cout << p->inf << " ";
+    // cout << p->right_edge << " ";
     pr(p->right);
   }
 }
+
 
 template <typename T> void tree<T>::create3(const T& x, const tree<T>& l, const tree<T>& r){
   if(root) deleteTree(root);
@@ -132,8 +140,15 @@ template <typename T> void tree<T>::createTree(node<T>*& pos) const{
   pos->right = NULL;
   cout << "Left tree of: "<< x << " y/n? ";
   cin >> c;
-  if(c == 'y') createTree(pos->left);
+  if(c == 'y'){
+    pos->left_edge = rand() % 32 + 1;
+    createTree(pos->left);
+  }
   cout << "Right tree of: "<< x << " y/n? ";
   cin >> c;
-  if(c == 'y') createTree(pos->right);
+  if(c == 'y'){
+    pos->right_edge = rand() % 32 + 1;
+    createTree(pos->right);
+
+  }
 }

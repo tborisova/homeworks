@@ -1,7 +1,7 @@
-// #include <iostream>
-// #include <cstdlib>
-// #include <cassert>
-// using namespace std;
+#include <iostream>
+#include <cstdlib>
+#include <cassert>
+using namespace std;
 
 template <typename T=int>
 struct elem_link1{
@@ -17,6 +17,7 @@ public:
   LList(const LList&);
   LList& operator=(const LList&);
   bool empty() const;
+  bool sorted() const;
   void iterStart(elem_link1<T>* p=NULL);
   elem_link1<T>* iter();
   void toEnd(const T&);
@@ -96,6 +97,7 @@ template <typename T> void LList<T>::toEnd(const T& x){
   end = new elem_link1<T>;
   end->inf = x;
   end->link = NULL;
+  cout << x << endl;
   if(p){
     p->link = end;
   }else{
@@ -132,7 +134,7 @@ template <typename T> void LList<T>::deleteAfter(elem_link1<T>* p, const T& x){
 }
 
 template <typename T> void LList<T>::deleteElem(elem_link1<T>* p, T& x){
-  
+
   if(start == p){
     x = start->inf;
     if(start == end)
@@ -160,6 +162,20 @@ template <typename T> void LList<T>::deleteBefore(elem_link1<T>* p, const T& x){
 
 template <typename T> bool LList<T>::empty() const{
   return start == NULL;
+}
+
+
+template <typename T> bool LList<T>::sorted() const{
+  elem_link1<T> *next_el, *temp = start;
+
+
+  while(temp){
+    next_el = temp->link;
+    if(next_el && next_el->inf > temp->inf) return true;
+    temp = temp->link;
+  }
+
+  return false;
 }
 
 template <typename T> void LList<T>::print() const{
@@ -232,8 +248,8 @@ template <typename T> istream& operator>>(istream& stream, LList<T>& list){
     list.toEnd(x);
     cout << "Continue?(y/n): ";
     cin >> ch;
-  }  
-  
+  }
+
   return stream;
 }
 

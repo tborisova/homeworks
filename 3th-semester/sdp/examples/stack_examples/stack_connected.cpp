@@ -1,7 +1,7 @@
-// #include <cstdlib>
-// #include <cassert>
-// #include <iostream>
-// using namespace std;
+#include <cstdlib>
+#include <cassert>
+#include <iostream>
+using namespace std;
 
 template <typename T>
 struct elem{
@@ -41,7 +41,7 @@ template<typename T>stack<T>::stack(const stack& st){
 }
 
 template<typename T> stack<T>& stack<T>::operator=(const stack<T>& st){
-  if (this != &st){ 
+  if (this != &st){
     deleteStack();
     copyStack(st);
   }
@@ -171,7 +171,7 @@ template <typename T> void map(T (*func)(T), stack<T>& st, stack<T>& res){
 //   st.push(30);
 
 //   map(my_map_func, st, st2);
-  
+
 //   // int x = 0;
 //   // accumulate(my_int_func, x, st2);
 
