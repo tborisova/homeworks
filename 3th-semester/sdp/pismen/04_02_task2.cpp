@@ -23,7 +23,7 @@ int solution(char *str, queue<int>& q){
       numbers.push(str[i]);
     } //push to number stack
   }
-  
+
   int result;
   numbers.pop(result);
   return result;
